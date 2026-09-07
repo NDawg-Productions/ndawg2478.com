@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin — ndawg2478</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-page">
+
+  <!-- Password gate: a light deterrent only, not real security. See admin.js. -->
+  <div class="gate-screen" id="gate">
+    <div class="gate-card">
+      <h1>Admin Access</h1>
+      <p>This panel edits the content behind your site. It's a basic gate, not real security — don't link to this page publicly.</p>
+      <form id="gate-form">
+        <input type="password" id="gate-password" placeholder="Password" autocomplete="off" required>
+        <button type="submit" class="btn btn-portfolio">Unlock</button>
+        <p class="gate-error" id="gate-error"></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="app" hidden>
+    <header class="admin-header">
+      <div class="admin-header-inner">
+        <div class="admin-title"><svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="M6.376 18.91a6 6 0 0 1 11.249.003" /><circle cx="12" cy="11" r="4" /></svg> Site Admin</div>
+        <div class="admin-actions">
+          <a class="admin-btn admin-btn--ghost" href="index.html" target="_blank" rel="noopener">
+            <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg> Preview site
+          </a>
+          <button type="button" class="admin-btn" id="reset-draft">
+            <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg> Discard draft
+          </button>
+          <button type="button" class="admin-btn" id="save-draft">
+            <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" /><path d="M7 3v4a1 1 0 0 0 1 1h7" /></svg> Save draft
+          </button>
+          <button type="button" class="admin-btn admin-btn--primary" id="export-json">
+            <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /></svg> Export site-data.json
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <p class="admin-status" id="admin-status"></p>
+
+    <main class="admin-main">
+
+      <!-- Profile & logos -->
+      <section class="admin-card">
+        <h2><svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10h2" /><path d="M16 14h2" /><path d="M6.17 15a3 3 0 0 1 5.66 0" /><circle cx="9" cy="11" r="2" /><rect x="2" y="5" width="20" height="14" rx="2" /></svg> Profile &amp; Logos</h2>
+        <p class="hint">Your handle, tagline, and the two images used on the hub page.</p>
+
+        <div class="field-row">
+          <label>Handle</label>
+          <input type="text" id="profile-handle" placeholder="@yourhandle">
+        </div>
+        <div class="field-row">
+          <label>Tagline</label>
+          <input type="text" id="profile-tagline" placeholder="A short line under your handle">
+        </div>
+
+        <div class="field-row">
+          <label>Banner image</label>
+          <div class="logo-row">
+            <div class="logo-preview"><img id="banner-preview-img" alt="Banner preview"></div>
+            <div class="logo-fields">
+              <label class="upload-btn">
+                <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12" /><path d="m17 8-5-5-5 5" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></svg> Upload banner image
+                <input type="file" id="banner-upload" accept="image/*">
+              </label>
+              <input type="text" id="banner-path" placeholder="assets/banner.jpg or upload above">
+              <span class="field-spec" id="banner-spec"></span>
+              <span class="dim-warning" id="banner-dim-warning"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label>Profile / logo image</label>
+          <div class="logo-row">
+            <div class="logo-preview"><img id="profile-preview-img" alt="Profile logo preview"></div>
+            <div class="logo-fields">
+              <label class="upload-btn">
+                <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12" /><path d="m17 8-5-5-5 5" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></svg> Upload logo image
+                <input type="file" id="profile-upload" accept="image/*">
+              </label>
+              <input type="text" id="profile-path" placeholder="assets/profile.png or upload above">
+              <span class="field-spec" id="profile-spec"></span>
+              <span class="dim-warning" id="profile-dim-warning"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Social links -->
+      <section class="admin-card">
+        <h2><svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" x2="15.42" y1="13.51" y2="17.49" /><line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></svg> Social Links</h2>
+        <p class="hint">Shown as pill buttons on the hub page, in this order. Twitch, YouTube, TikTok, X, and Instagram already have their official logos bundled in <code>assets/icons/</code>. For any other platform, add the logo file to that folder yourself and reference its path here — logo uploads in this panel are reserved for the banner and profile logo in the Profile &amp; Logos section above.</p>
+
+        <div id="social-links-list"></div>
+        <button type="button" class="add-btn" id="add-social-link">
+          <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg> Add link
+        </button>
+      </section>
+
+      <!-- Services -->
+      <section class="admin-card">
+        <h2><svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /><rect width="20" height="14" x="2" y="6" rx="2" /></svg> Portfolio Services</h2>
+        <p class="hint">Grouped into categories (e.g. Streamer Services, Corporate Services). Each service can optionally link out to a booking page, form, or example.</p>
+
+        <div id="service-categories-list"></div>
+        <button type="button" class="add-btn" id="add-category">
+          <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg> Add category
+        </button>
+      </section>
+
+      <!-- Contact -->
+      <section class="admin-card">
+        <h2><svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /><rect x="2" y="4" width="20" height="16" rx="2" /></svg> Contact Button</h2>
+        <p class="hint">Powers the "Contact for Production Inquiries" mailto button on the portfolio page.</p>
+
+        <div class="field-row">
+          <label>Email address</label>
+          <input type="text" id="contact-email" placeholder="hello@yoursite.com">
+        </div>
+        <div class="field-row">
+          <label>Email subject</label>
+          <input type="text" id="contact-subject" placeholder="Production Inquiry">
+        </div>
+      </section>
+
+    </main>
+
+    <p class="admin-footer-note">
+      <strong>How publishing works:</strong> this site is static (GitHub Pages), so there's no live database —
+      "Save draft" only previews changes in this browser. When you're happy with your edits, click
+      "Export site-data.json" and replace <code>/data/site-data.json</code> in your GitHub repo with the
+      downloaded file, then commit. GitHub Pages will redeploy automatically within a minute or two.
+    </p>
+  </div>
+
+  <script src="js/icons.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

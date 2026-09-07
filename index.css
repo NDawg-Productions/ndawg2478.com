@@ -1,0 +1,107 @@
+/* ==========================================================================
+   index.html — Social Hub specific styles
+   ========================================================================== */
+
+.hub {
+  padding-top: 0;
+}
+
+.banner {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  border-bottom: 2px solid var(--accent-sunset);
+}
+
+.banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 45%;
+}
+
+.banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(16, 22, 15, 0) 55%, var(--bg-deep) 100%);
+}
+
+.profile-block {
+  position: relative;
+  text-align: center;
+  padding: 0 20px;
+  margin-top: -70px;
+}
+
+.profile-pic {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 14px;
+  border: 4px solid var(--bg-deep);
+  box-shadow: var(--shadow-soft);
+  background: var(--bg-forest);
+}
+
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.handle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tagline {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+/* Brand logos rendered as inline images (see js/site-data.js) */
+.social-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+  /* Logos ship in their real brand colors and stay that way — logos
+     shouldn't be recolored on hover, unlike icon-font glyphs. */
+}
+
+.btn-social:hover .social-icon {
+  filter: drop-shadow(0 0 4px rgba(224, 135, 42, 0.35));
+}
+
+.bridge {
+  margin-top: 6px;
+}
+
+.bridge-heading {
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 14px;
+}
+
+.micro-copy {
+  text-align: center;
+  margin-top: 14px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
