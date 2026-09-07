@@ -1,7 +1,7 @@
 {
   "profile": {
-    "handle": "@ndawg2478",
-    "tagline": "Streaming from the Pacific Northwest 🌲",
+    "handle": "NDawg2478",
+    "tagline": "Streaming with Daisy the St. Bernard from the Pacific Northwest 🌲",
     "bannerImage": "assets/banner.jpg",
     "bannerImageSpec": "Recommended: 1920×1080px, JPG, max 500KB",
     "profileImage": "assets/profile.png",
@@ -103,7 +103,7 @@
     }
   ],
   "contact": {
-    "email": "hi@ndawg2478.com",
+    "email": "hello@ndawg2478.com",
     "subject": "Production Inquiry"
   }
 }
