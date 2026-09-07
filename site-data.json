@@ -1,0 +1,109 @@
+{
+  "profile": {
+    "handle": "@ndawg2478",
+    "tagline": "Streaming from the Pacific Northwest 🌲",
+    "bannerImage": "assets/banner.jpg",
+    "bannerImageSpec": "Recommended: 1920×1080px, JPG, max 500KB",
+    "profileImage": "assets/profile.png",
+    "profileImageSpec": "Recommended: 500×500px, PNG (transparent ok), max 2MB"
+  },
+  "socialLinks": [
+    {
+      "id": "twitch",
+      "label": "Twitch",
+      "url": "https://twitch.tv/ndawg2478",
+      "icon": "assets/icons/twitch.svg"
+    },
+    {
+      "id": "youtube",
+      "label": "YouTube",
+      "url": "https://youtube.com/@ndawg2478",
+      "icon": "assets/icons/youtube.svg"
+    },
+    {
+      "id": "tiktok",
+      "label": "TikTok",
+      "url": "https://tiktok.com/@ndawg2478",
+      "icon": "assets/icons/tiktok.svg"
+    },
+    {
+      "id": "x",
+      "label": "X",
+      "url": "https://x.com/ndawg2478",
+      "icon": "assets/icons/x.svg"
+    },
+    {
+      "id": "instagram",
+      "label": "Instagram",
+      "url": "https://instagram.com/ndawg2478",
+      "icon": "assets/icons/instagram.svg"
+    }
+  ],
+  "portfolioIntro": {
+    "eyebrow": "Professional Services",
+    "title": "Production & Creative Services",
+    "description": "Support for creators and businesses alike — from streaming setup and community tools to on-site video production."
+  },
+  "serviceCategories": [
+    {
+      "id": "streamer",
+      "title": "Streamer Services",
+      "accent": "sunset",
+      "services": [
+        {
+          "id": "pc-setup",
+          "title": "PC Streaming Setup Support",
+          "description": "Full PC and software configuration for reliable, high-quality streaming — capture, encoding, and scene setup dialed in for your hardware.",
+          "icon": "monitor",
+          "link": ""
+        },
+        {
+          "id": "blerp-bot",
+          "title": "Blerp & Bot Support",
+          "description": "Setup and configuration of Blerp and chat bots to keep your community engaged with soundboards, commands, and automated interactions.",
+          "icon": "bot",
+          "link": ""
+        },
+        {
+          "id": "merch-design",
+          "title": "Merch & Design Support",
+          "description": "Custom merch design and storefront support to help creators turn their brand into products their community can wear and use.",
+          "icon": "shirt",
+          "link": ""
+        },
+        {
+          "id": "short-editing",
+          "title": "Short Video Editing",
+          "description": "Fast-turnaround edits for clips, highlights, and social-ready shorts pulled from streams or raw footage.",
+          "icon": "scissors",
+          "link": ""
+        }
+      ]
+    },
+    {
+      "id": "corporate",
+      "title": "Corporate Services",
+      "accent": "purple",
+      "services": [
+        {
+          "id": "corp-event",
+          "title": "Corporate & Event Video Filming/Production",
+          "description": "On-site filming and full production for corporate events, from single-camera coverage to multi-cam setups with professional delivery.",
+          "icon": "video",
+          "link": ""
+        },
+        {
+          "id": "corp-training",
+          "title": "Corporate Training Video Production",
+          "description": "Scripted and produced training content for internal teams — clear, professional videos built to onboard and educate.",
+          "icon": "presentation",
+          "link": ""
+        }
+      ]
+    }
+  ],
+  "contact": {
+    "email": "hi@ndawg2478.com",
+    "subject": "Production Inquiry"
+  }
+}
