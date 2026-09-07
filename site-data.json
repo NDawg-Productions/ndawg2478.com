@@ -1,7 +1,7 @@
 {
   "profile": {
-    "handle": "NDawg2478",
-    "tagline": "Streaming with Daisy the St. Bernard from the Pacific Northwest 🌲",
+    "handle": "@ndawg2478",
+    "tagline": "Streaming from the Pacific Northwest 🌲",
     "bannerImage": "assets/banner.jpg",
     "bannerImageSpec": "Recommended: 1920×1080px, JPG, max 500KB",
     "profileImage": "assets/profile.png",
@@ -37,6 +37,12 @@
       "label": "Instagram",
       "url": "https://instagram.com/ndawg2478",
       "icon": "assets/icons/instagram.svg"
+    },
+    {
+      "id": "link-h8fzlaj",
+      "label": "Merch",
+      "url": "shop.ndawg2478.com",
+      "icon": "assets/icons/NP Logo.png"
     }
   ],
   "portfolioIntro": {
