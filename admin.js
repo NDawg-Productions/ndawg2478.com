@@ -22,7 +22,7 @@
    keeping this admin.html file out of any linked navigation.
    ========================================================================== */
 
-const ADMIN_PASSWORD = 'changeme'; // <-- change this before publishing
+const ADMIN_PASSWORD = 'Daisy20221118'; // <-- change this before publishing
 const GATE_SESSION_KEY = 'ndawgAdminUnlocked';
 const DRAFT_KEY = 'ndawgSiteDataDraft';
 const DATA_PATH = 'data/site-data.json';
