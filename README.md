@@ -22,13 +22,16 @@ Link-in-bio hub + production services portfolio for @ndawg2478. Static HTML/CSS/
 │   └── icons.js          # Local inline icon set (no external icon-font CDN)
 ├── assets/
 │   ├── banner.jpg        # Sunset mountain-lake banner
-│   └── profile.png       # Low-poly Saint Bernard logo
+│   ├── profile.webp      # Low-poly Saint Bernard logo
+│   ├── favicon.png
+│   ├── apple-touch.png
+│   └── icons/            # Social marks, plus the unused merch logo
 └── README.md
 ```
 
 ## How content works now
 
-`index.html` and `portfolio.html` no longer hardcode your links or services — they fetch `data/site-data.json` at load time and render it. That JSON is what `admin.html` edits.
+`index.html` and `portfolio.html` no longer hardcode your links or services — they fetch `data/site-data.json` at load time and render it. That JSON is what `admin.html` edits. A second `site-data.json` in the repo root is not read by the site.
 
 **⚠️ Important: this is a static site (GitHub Pages), not a backend.** There's no server or database, so:
 
@@ -39,7 +42,7 @@ If you outgrow this and want true live editing without a manual export/commit st
 
 ### Admin password
 
-`admin.html` is gated by a password set in `admin.js` (`ADMIN_PASSWORD`, currently `changeme`). **Change this before publishing.** This is a basic deterrent only, not real security — anyone who views the page source can read the password — so also avoid linking to `/admin.html` from anywhere public.
+`admin.html` is gated by a password set in `admin.js` (`ADMIN_PASSWORD`). **Change it if the committed value is one you have ever shared.** This is a basic deterrent only, not real security — anyone who views the page source can read the password — so also avoid linking to `/admin.html` from anywhere public.
 
 ### Testing locally
 
@@ -71,7 +74,7 @@ Then visit `http://localhost:8000/index.html`, `/portfolio.html`, and `/admin.ht
 
 4. **Visit your site.** After a minute or two, it will be live at `https://USERNAME.github.io`.
 
-5. **Change the admin password.** Before pushing, open `admin.js` and change `ADMIN_PASSWORD = 'changeme'` to something real. It's only a casual deterrent (see the warning at the top of that file), but there's no reason to ship the default.
+5. **Change the admin password** in `admin.js` if you are still using a value that has been shared. It's only a casual deterrent (see the warning at the top of that file).
 
 ## Custom domain — connecting ndawg2478.com to GitHub Pages
 

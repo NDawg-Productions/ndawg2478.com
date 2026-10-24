@@ -111,7 +111,7 @@ async function loadData() {
     try {
       return JSON.parse(draft);
     } catch (e) {
-      console.warn('Draft parse failed, loading published data.json instead.', e);
+      console.warn('Draft parse failed, loading published data/site-data.json instead.', e);
     }
   }
   const res = await fetch(DATA_PATH);
@@ -247,17 +247,17 @@ function renderSocialLinks() {
   container.innerHTML = state.socialLinks.map((link, i) => `
     <div class="link-row" data-index="${i}">
       <div class="link-row-grid">
-        <div class="field-row" style="margin-bottom:0">
-          <label>Label</label>
-          <input type="text" data-field="label" value="${escapeAttr(link.label)}" placeholder="e.g. Discord">
+        <div class="field-row field-row--flush">
+          <label for="social-${i}-label">Label</label>
+          <input id="social-${i}-label" type="text" data-field="label" value="${escapeAttr(link.label)}" placeholder="e.g. Discord">
         </div>
-        <div class="field-row" style="margin-bottom:0">
-          <label>URL</label>
-          <input type="url" data-field="url" value="${escapeAttr(link.url)}" placeholder="https://...">
+        <div class="field-row field-row--flush">
+          <label for="social-${i}-url">URL</label>
+          <input id="social-${i}-url" type="url" data-field="url" value="${escapeAttr(link.url)}" placeholder="https://...">
         </div>
-        <div class="field-row" style="margin-bottom:0">
-          <label>Icon path</label>
-          <input type="text" data-field="icon" value="${escapeAttr(link.icon)}" placeholder="assets/icons/discord.svg">
+        <div class="field-row field-row--flush">
+          <label for="social-${i}-icon">Icon path</label>
+          <input id="social-${i}-icon" type="text" data-field="icon" value="${escapeAttr(link.icon)}" placeholder="assets/icons/discord.svg">
         </div>
         <button type="button" class="remove-btn" title="Remove link" aria-label="Remove link">
           ${window.svgIcon('trash-2')}
@@ -293,12 +293,12 @@ function renderServiceCategories() {
     <div class="category-block" data-cat-index="${ci}">
       <div class="category-head">
         <div class="field-row">
-          <label>Category name</label>
-          <input type="text" data-cat-field="title" value="${escapeAttr(cat.title)}" placeholder="e.g. Streamer Services">
+          <label for="cat-${ci}-title">Category name</label>
+          <input id="cat-${ci}-title" type="text" data-cat-field="title" value="${escapeAttr(cat.title)}" placeholder="e.g. Streamer Services">
         </div>
-        <div class="field-row" style="max-width:160px">
-          <label>Accent color</label>
-          <select data-cat-field="accent">
+        <div class="field-row field-row--narrow">
+          <label for="cat-${ci}-accent">Accent color</label>
+          <select id="cat-${ci}-accent" data-cat-field="accent">
             <option value="sunset" ${cat.accent === 'sunset' ? 'selected' : ''}>Sunset orange</option>
             <option value="purple" ${cat.accent === 'purple' ? 'selected' : ''}>Purple</option>
           </select>
@@ -312,21 +312,21 @@ function renderServiceCategories() {
         ${(cat.services || []).map((svc, si) => `
           <div class="service-row" data-svc-index="${si}">
             <div class="field-row">
-              <label>Service title</label>
-              <input type="text" data-svc-field="title" value="${escapeAttr(svc.title)}" placeholder="Service name">
+              <label for="svc-${ci}-${si}-title">Service title</label>
+              <input id="svc-${ci}-${si}-title" type="text" data-svc-field="title" value="${escapeAttr(svc.title)}" placeholder="Service name">
             </div>
             <div class="field-row">
-              <label>Description</label>
-              <textarea data-svc-field="description" placeholder="Short description">${escapeHtml(svc.description)}</textarea>
+              <label for="svc-${ci}-${si}-description">Description</label>
+              <textarea id="svc-${ci}-${si}-description" data-svc-field="description" placeholder="Short description">${escapeHtml(svc.description)}</textarea>
             </div>
             <div class="link-row-grid">
-              <div class="field-row" style="margin-bottom:0">
-                <label>Icon</label>
-                <input type="text" data-svc-field="icon" value="${escapeAttr(svc.icon)}" placeholder="monitor, bot, shirt, scissors, video, presentation, briefcase, star">
+              <div class="field-row field-row--flush">
+                <label for="svc-${ci}-${si}-icon">Icon</label>
+                <input id="svc-${ci}-${si}-icon" type="text" data-svc-field="icon" value="${escapeAttr(svc.icon)}" placeholder="monitor, bot, shirt, scissors, video, presentation, briefcase, star">
               </div>
-              <div class="field-row" style="margin-bottom:0">
-                <label>Link (optional)</label>
-                <input type="url" data-svc-field="link" value="${escapeAttr(svc.link)}" placeholder="https://... (booking page, form, etc.)">
+              <div class="field-row field-row--flush">
+                <label for="svc-${ci}-${si}-link">Link (optional)</label>
+                <input id="svc-${ci}-${si}-link" type="url" data-svc-field="link" value="${escapeAttr(svc.link)}" placeholder="https://... (booking page, form, etc.)">
               </div>
               <div></div>
               <button type="button" class="remove-btn" title="Remove service" aria-label="Remove service">

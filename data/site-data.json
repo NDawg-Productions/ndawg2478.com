@@ -4,8 +4,8 @@
     "tagline": "Streaming from the Pacific Northwest 🌲",
     "bannerImage": "assets/banner.jpg",
     "bannerImageSpec": "Recommended: 1920×1080px, JPG, max 500KB",
-    "profileImage": "assets/profile.png",
-    "profileImageSpec": "Recommended: 500×500px, PNG (transparent ok), max 2MB"
+    "profileImage": "assets/profile.webp",
+    "profileImageSpec": "Recommended: 360×360px or larger, WebP or PNG"
   },
   "socialLinks": [
     {

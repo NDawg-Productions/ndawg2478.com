@@ -28,7 +28,6 @@ body.admin-page {
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-card);
   padding: 32px 28px;
-  box-shadow: var(--shadow-soft);
   text-align: center;
 }
 
@@ -42,6 +41,16 @@ body.admin-page {
   font-size: 0.85rem;
   margin-bottom: 20px;
   line-height: 1.5;
+}
+
+.gate-label {
+  display: block;
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
 .gate-card input[type="password"] {
@@ -109,14 +118,14 @@ body.admin-page {
   gap: 8px;
   padding: 9px 16px;
   border-radius: var(--radius-pill);
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.82rem;
   cursor: pointer;
   border: 1px solid var(--border-soft);
   background: var(--charcoal);
   color: var(--text-primary);
-  transition: all 0.18s ease;
+  transition: border-color 0.16s ease, color 0.16s ease, background-color 0.16s ease;
 }
 
 .admin-btn:hover {
@@ -189,13 +198,23 @@ body.admin-page {
   margin-bottom: 16px;
 }
 
-.field-row label {
+.field-row label,
+.group-label {
   display: block;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
+  font-weight: 500;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 6px;
+}
+
+.field-row--flush {
+  margin-bottom: 0;
+}
+
+.field-row--narrow {
+  max-width: 160px;
 }
 
 .field-row input[type="text"],
@@ -320,8 +339,8 @@ body.admin-page {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 1px solid var(--border-soft);
   background: var(--charcoal);

@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#10160f">
   <title>Admin — ndawg2478</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="admin.css">
@@ -20,9 +23,10 @@
       <h1>Admin Access</h1>
       <p>This panel edits the content behind your site. It's a basic gate, not real security — don't link to this page publicly.</p>
       <form id="gate-form">
-        <input type="password" id="gate-password" placeholder="Password" autocomplete="off" required>
+        <label class="gate-label" for="gate-password">Password</label>
+        <input type="password" id="gate-password" autocomplete="current-password" required>
         <button type="submit" class="btn btn-portfolio">Unlock</button>
-        <p class="gate-error" id="gate-error"></p>
+        <p class="gate-error" id="gate-error" role="alert"></p>
       </form>
     </div>
   </div>
@@ -48,7 +52,7 @@
       </div>
     </header>
 
-    <p class="admin-status" id="admin-status"></p>
+    <p class="admin-status" id="admin-status" role="status"></p>
 
     <main class="admin-main">
 
@@ -58,16 +62,16 @@
         <p class="hint">Your handle, tagline, and the two images used on the hub page.</p>
 
         <div class="field-row">
-          <label>Handle</label>
-          <input type="text" id="profile-handle" placeholder="@yourhandle">
+          <label for="profile-handle">Handle</label>
+          <input type="text" id="profile-handle" placeholder="@yourhandle" autocomplete="nickname">
         </div>
         <div class="field-row">
-          <label>Tagline</label>
+          <label for="profile-tagline">Tagline</label>
           <input type="text" id="profile-tagline" placeholder="A short line under your handle">
         </div>
 
         <div class="field-row">
-          <label>Banner image</label>
+          <p class="group-label">Banner image</p>
           <div class="logo-row">
             <div class="logo-preview"><img id="banner-preview-img" alt="Banner preview"></div>
             <div class="logo-fields">
@@ -75,6 +79,7 @@
                 <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12" /><path d="m17 8-5-5-5 5" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></svg> Upload banner image
                 <input type="file" id="banner-upload" accept="image/*">
               </label>
+              <label class="visually-hidden" for="banner-path">Banner image path</label>
               <input type="text" id="banner-path" placeholder="assets/banner.jpg or upload above">
               <span class="field-spec" id="banner-spec"></span>
               <span class="dim-warning" id="banner-dim-warning"></span>
@@ -83,7 +88,7 @@
         </div>
 
         <div class="field-row">
-          <label>Profile / logo image</label>
+          <p class="group-label">Profile / logo image</p>
           <div class="logo-row">
             <div class="logo-preview"><img id="profile-preview-img" alt="Profile logo preview"></div>
             <div class="logo-fields">
@@ -91,7 +96,8 @@
                 <svg class="icon-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12" /><path d="m17 8-5-5-5 5" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></svg> Upload logo image
                 <input type="file" id="profile-upload" accept="image/*">
               </label>
-              <input type="text" id="profile-path" placeholder="assets/profile.png or upload above">
+              <label class="visually-hidden" for="profile-path">Profile image path</label>
+              <input type="text" id="profile-path" placeholder="assets/profile.webp or upload above">
               <span class="field-spec" id="profile-spec"></span>
               <span class="dim-warning" id="profile-dim-warning"></span>
             </div>
@@ -127,11 +133,11 @@
         <p class="hint">Powers the "Contact for Production Inquiries" mailto button on the portfolio page.</p>
 
         <div class="field-row">
-          <label>Email address</label>
-          <input type="text" id="contact-email" placeholder="hello@yoursite.com">
+          <label for="contact-email">Email address</label>
+          <input type="text" id="contact-email" placeholder="hello@yoursite.com" autocomplete="email">
         </div>
         <div class="field-row">
-          <label>Email subject</label>
+          <label for="contact-subject">Email subject</label>
           <input type="text" id="contact-subject" placeholder="Production Inquiry">
         </div>
       </section>

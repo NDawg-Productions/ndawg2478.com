@@ -1,9 +1,9 @@
 /* ==========================================================================
-   portfolio.html — Production Services specific styles
+   portfolio.html — production services
    ========================================================================== */
 
 .portfolio-page {
-  padding-top: 34px;
+  padding-top: 28px;
 }
 
 .back-link {
@@ -11,179 +11,191 @@
   align-items: center;
   gap: 8px;
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: color 0.18s ease;
-  margin-bottom: 30px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 36px;
+  transition: color 0.16s ease;
 }
 
-.back-link:hover {
-  color: var(--accent-sunset-soft);
+.back-link .icon-inline {
+  width: 16px;
+  height: 16px;
 }
 
 .portfolio-header {
-  text-align: center;
-  margin-bottom: 40px;
+  text-align: left;
+  margin-bottom: 48px;
+  max-width: 40rem;
 }
 
 .portfolio-header .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--accent-purple-soft);
-  font-size: 0.78rem;
-  text-transform: uppercase;
+  color: var(--text-faint);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.6875rem;
   letter-spacing: 0.16em;
-  margin-bottom: 10px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
 }
 
-.portfolio-header .eyebrow i {
-  font-size: 0.9rem;
+.portfolio-header .eyebrow .icon-inline {
+  width: 14px;
+  height: 14px;
 }
 
 .portfolio-header h1 {
-  font-size: 2rem;
-  color: var(--text-primary);
-  line-height: 1.2;
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  max-width: 22em;
+  text-wrap: balance;
 }
 
 .portfolio-header p {
   margin-top: 14px;
   color: var(--text-secondary);
-  font-size: 0.98rem;
-  max-width: 60ch;
-  margin-left: auto;
-  margin-right: auto;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 46ch;
 }
 
 .service-section {
-  margin-bottom: 44px;
+  margin-bottom: 40px;
 }
 
 .section-title {
-  font-size: 1.15rem;
-  color: var(--accent-sunset-soft);
-  margin-bottom: 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.125rem;
+  color: var(--text-primary);
+  margin-bottom: 16px;
 }
 
-.service-section[data-accent="purple"] .section-title {
-  color: var(--accent-purple-soft);
+.section-title::before {
+  content: "";
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent-sunset);
+  flex-shrink: 0;
+}
+
+.service-section[data-accent="purple"] .section-title::before {
+  background: var(--accent-purple-soft);
 }
 
 .service-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
-}
-
-@media (min-width: 700px) {
-  .service-grid {
-    grid-template-columns: 1fr 1fr;
-  }
+  gap: 12px;
 }
 
 .service-card {
   background: var(--bg-forest);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-card);
-  padding: 26px;
-  box-shadow: var(--shadow-soft);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.service-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(224, 135, 42, 0.4);
+  padding: 22px 22px 20px;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
 }
 
 .service-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(224, 135, 42, 0.14);
-  color: var(--accent-sunset);
-  font-size: 1.2rem;
+  background: rgba(243, 239, 230, 0.05);
+  color: var(--text-primary);
   margin-bottom: 16px;
 }
 
-.service-section[data-accent="purple"] .service-icon {
-  background: rgba(138, 107, 177, 0.16);
-  color: var(--accent-purple-soft);
+.service-icon .icon-inline {
+  width: 18px;
+  height: 18px;
+}
+
+.service-card h3 {
+  font-size: 1.0625rem;
+  margin-bottom: 8px;
+}
+
+.service-card p {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
 }
 
 .service-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin-top: 14px;
-  font-size: 0.86rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 500;
   color: var(--accent-sunset-soft);
-  transition: gap 0.18s ease;
-}
-
-.service-link:hover {
-  gap: 12px;
 }
 
 .service-section[data-accent="purple"] .service-link {
   color: var(--accent-purple-soft);
 }
 
-.service-card h3 {
-  font-size: 1.08rem;
-  color: var(--text-primary);
-  margin-bottom: 10px;
-}
-
-.service-card p {
-  color: var(--text-secondary);
-  font-size: 0.92rem;
-  line-height: 1.6;
-}
-
-.service-card .tools {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.service-card .tools span {
-  font-size: 0.74rem;
-  padding: 5px 11px;
-  border-radius: var(--radius-pill);
-  background: var(--charcoal);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-soft);
-  letter-spacing: 0.01em;
-}
-
 .cta-block {
-  text-align: center;
-  margin-top: 50px;
-  padding-top: 40px;
+  text-align: left;
+  margin-top: 48px;
+  padding-top: 36px;
   border-top: 1px solid var(--border-soft);
 }
 
-.cta-block h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: var(--text-primary);
+.cta-block h2 {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
 }
 
 .cta-block p {
   color: var(--text-secondary);
-  font-size: 0.92rem;
-  margin-bottom: 22px;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  max-width: 42ch;
 }
 
 .cta-block .btn {
-  max-width: 340px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 22rem;
+}
+
+@media (min-width: 760px) {
+  .portfolio-page {
+    padding-top: 48px;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+}
+
+@media (hover: hover) {
+  .back-link:hover {
+    color: var(--text-primary);
+  }
+
+  .service-card:hover {
+    border-color: rgba(243, 239, 230, 0.22);
+    background: var(--bg-forest-light);
+  }
+
+  .service-link:hover {
+    color: var(--text-primary);
+  }
+}
+
+@media (max-width: 420px) {
+  .container--wide {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }

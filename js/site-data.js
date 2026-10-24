@@ -28,7 +28,7 @@ async function loadSiteData() {
     try {
       return { data: JSON.parse(draft), isDraft: true };
     } catch (e) {
-      console.warn('Could not parse draft site data, falling back to published data.json', e);
+      console.warn('Could not parse draft site data, falling back to data/site-data.json', e);
     }
   }
   const res = await fetch(SITE_DATA_PATH);
@@ -44,10 +44,10 @@ function escapeHtml(str) {
 
 function showDraftBanner() {
   const banner = document.createElement('div');
+  banner.className = 'draft-banner';
+  banner.setAttribute('role', 'status');
   banner.textContent = 'Previewing unpublished admin draft — changes are only visible in this browser until exported and committed.';
-  banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#8a6bb1;color:#14100c;' +
-    'font-family:Montserrat,sans-serif;font-size:0.78rem;font-weight:600;text-align:center;' +
-    'padding:10px 14px;z-index:9999;letter-spacing:0.02em;';
+  document.body.classList.add('has-draft-banner');
   document.body.appendChild(banner);
 }
 
@@ -72,7 +72,9 @@ function renderHub(data) {
   if (socialContainer && Array.isArray(data.socialLinks)) {
     socialContainer.innerHTML = data.socialLinks.map((link) => `
       <a class="btn btn-social" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
-        <img class="social-icon" src="${escapeHtml(link.icon)}" alt="" aria-hidden="true"> ${escapeHtml(link.label)}
+        <img class="social-icon" src="${escapeHtml(link.icon)}" alt="" width="18" height="18" aria-hidden="true">
+        <span>${escapeHtml(link.label)}</span>
+        <span class="visually-hidden"> (opens in a new tab)</span>
       </a>
     `).join('');
   }
@@ -96,13 +98,13 @@ function renderPortfolio(data) {
     container.innerHTML = data.serviceCategories.map((cat) => `
       <section class="service-section" data-accent="${escapeHtml(cat.accent)}">
         <h2 class="section-title">${escapeHtml(cat.title)}</h2>
-        <div class="service-grid" aria-label="${escapeHtml(cat.title)} offerings">
+        <div class="service-grid">
           ${(cat.services || []).map((svc) => `
             <article class="service-card">
-              <div class="service-icon">${window.svgIcon(svc.icon)}</div>
+              <div class="service-icon" aria-hidden="true">${window.svgIcon(svc.icon)}</div>
               <h3>${escapeHtml(svc.title)}</h3>
               <p>${escapeHtml(svc.description)}</p>
-              ${svc.link ? `<a class="service-link" href="${escapeHtml(svc.link)}" target="_blank" rel="noopener noreferrer">Learn more ${window.svgIcon('arrow-right')}</a>` : ''}
+              ${svc.link ? `<a class="service-link" href="${escapeHtml(svc.link)}" target="_blank" rel="noopener noreferrer">Learn more ${window.svgIcon('arrow-right')}<span class="visually-hidden"> (opens in a new tab)</span></a>` : ''}
             </article>
           `).join('')}
         </div>

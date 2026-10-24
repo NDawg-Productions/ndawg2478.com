@@ -1,17 +1,13 @@
 /* ==========================================================================
-   index.html — Social Hub specific styles
+   index.html — social hub
    ========================================================================== */
-
-.hub {
-  padding-top: 0;
-}
 
 .banner {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: 200px;
   overflow: hidden;
-  border-bottom: 2px solid var(--accent-sunset);
+  background: var(--bg-forest);
 }
 
 .banner img {
@@ -25,24 +21,23 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(16, 22, 15, 0) 55%, var(--bg-deep) 100%);
+  background: linear-gradient(to bottom, rgba(16, 22, 15, 0) 42%, var(--bg-deep) 100%);
+  pointer-events: none;
 }
 
 .profile-block {
   position: relative;
   text-align: center;
-  padding: 0 20px;
-  margin-top: -70px;
+  margin-top: -52px;
 }
 
 .profile-pic {
-  width: 132px;
-  height: 132px;
-  border-radius: 50%;
+  width: 104px;
+  height: 104px;
+  border-radius: 22px;
   overflow: hidden;
-  margin: 0 auto 14px;
-  border: 4px solid var(--bg-deep);
-  box-shadow: var(--shadow-soft);
+  margin: 0 auto 16px;
+  border: 3px solid var(--bg-deep);
   background: var(--bg-forest);
 }
 
@@ -53,48 +48,39 @@
 }
 
 .handle {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.375rem;
   color: var(--text-primary);
 }
 
 .tagline {
-  margin-top: 6px;
+  margin-top: 8px;
   color: var(--text-secondary);
-  font-size: 0.92rem;
+  font-size: 0.9375rem;
 }
 
 .social-links {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 30px;
+  gap: 10px;
+  margin-top: 32px;
 }
 
-/* Brand logos rendered as inline images (see js/site-data.js) */
 .social-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
   flex-shrink: 0;
-  /* Logos ship in their real brand colors and stay that way — logos
-     shouldn't be recolored on hover, unlike icon-font glyphs. */
-}
-
-.btn-social:hover .social-icon {
-  filter: drop-shadow(0 0 4px rgba(224, 135, 42, 0.35));
-}
-
-.bridge {
-  margin-top: 6px;
 }
 
 .bridge-heading {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   text-align: center;
   color: var(--text-faint);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
   margin-bottom: 14px;
 }
 
@@ -102,6 +88,42 @@
   text-align: center;
   margin-top: 14px;
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   letter-spacing: 0.02em;
+}
+
+@media (min-width: 800px) {
+  .banner {
+    height: 272px;
+  }
+
+  .profile-block {
+    margin-top: -58px;
+  }
+
+  .profile-pic {
+    width: 112px;
+    height: 112px;
+    border-radius: 24px;
+  }
+}
+
+@media (max-width: 380px) {
+  .banner {
+    height: 168px;
+  }
+
+  .profile-block {
+    margin-top: -44px;
+  }
+
+  .profile-pic {
+    width: 92px;
+    height: 92px;
+    border-radius: 18px;
+  }
+
+  .handle {
+    font-size: 1.25rem;
+  }
 }
