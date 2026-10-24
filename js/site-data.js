@@ -652,7 +652,7 @@ function showLoadError() {
       <div class="wrap">
         <h1>Production &amp; Creative Services</h1>
         <p class="lede">The page could not load its content file.</p>
-        <a class="btn btn-primary" href="mailto:hello@ndawg2478.com?subject=Production%20Inquiry">Contact for Production Inquiries</a>
+        <a class="btn btn-primary" href="mailto:hi@ndawg2478.com?subject=Production%20Inquiry">Contact for Production Inquiries</a>
       </div>
     </section>
   `;
