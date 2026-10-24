@@ -1,13 +1,13 @@
 # ndawg2478.github.io
 
-Production services site for @ndawg2478. Static HTML/CSS/vanilla JS, built for GitHub Pages. Edit `data/site-data.json` and commit to publish.
+Creator site for @ndawg2478, with professional services on `portfolio.html`. Static HTML/CSS/vanilla JS, built for GitHub Pages. Edit `data/site-data.json` and commit to publish.
 
 ## File structure
 
 ```
 .
-├── index.html            # Home: hero, services, platforms, contact
-├── portfolio.html        # Services page
+├── index.html            # Home: creator profile, TikTok and Instagram, contact
+├── portfolio.html        # Professional services (kept at this URL)
 ├── styles.css            # All styles
 ├── CNAME                 # Custom domain
 ├── data/
@@ -27,6 +27,14 @@ Production services site for @ndawg2478. Static HTML/CSS/vanilla JS, built for G
 ## How content works now
 
 `index.html` and `portfolio.html` load `data/site-data.json` and render it. That file is the only copy to edit. Empty fields under `optional` (bio, testimonials, client logos, featured work) stay off the page until they are filled.
+
+The homepage embeds the TikTok and Instagram accounts from `socialLinks` with each network's official embed (no API key). `feeds.tiktok` and `feeds.instagram` add specific videos and posts. Leave those lists empty until the URLs are real:
+
+- TikTok video: `https://www.tiktok.com/@ndawg2478/video/VIDEO_ID`
+- Instagram reel: `https://www.instagram.com/reel/SHORTCODE/`
+- Instagram post: `https://www.instagram.com/p/SHORTCODE/`
+
+Embed scripts load only when that part of the page is near the screen.
 
 The in-browser admin panel has been removed. Its password is still in older git commits and should be treated as exposed — change anything that password was reused for. Do not put a new password in this repository.
 

@@ -1,5 +1,5 @@
 {
-  "_edit": "This is the only content file. Edit it and commit; GitHub Pages will publish the change. Visitors only see optional sections after the fields are filled. optional.bio is one paragraph. optional.testimonials items need quote and name (role is optional). optional.clientLogos items need name (image is optional). optional.featuredWork items need title, image, and summary (url is optional). Leave them empty until the details are real.",
+  "_edit": "This is the only content file. Edit it and commit; GitHub Pages will publish the change. Visitors only see optional sections after the fields are filled. optional.bio is one paragraph. optional.testimonials items need quote and name (role is optional). optional.clientLogos items need name (image is optional). optional.featuredWork items need title, image, and summary (url is optional). Leave them empty until the details are real. feeds.tiktok and feeds.instagram are lists of real video or post URLs. A TikTok entry looks like https://www.tiktok.com/@ndawg2478/video/VIDEO_ID. An Instagram entry looks like https://www.instagram.com/reel/SHORTCODE/ or https://www.instagram.com/p/SHORTCODE/. Leave both lists empty to show only the official profile embeds. Do not invent links.",
   "profile": {
     "handle": "@ndawg2478",
     "tagline": "Streaming from the Pacific Northwest 🌲",
@@ -66,6 +66,11 @@
       "icon": "shirt"
     }
   ],
+  "feeds": {
+    "_note": "Paste real URLs only. TikTok: https://www.tiktok.com/@ndawg2478/video/VIDEO_ID (the number from that video's address bar). Instagram: https://www.instagram.com/reel/SHORTCODE/ or https://www.instagram.com/p/SHORTCODE/. Empty lists keep the homepage on the official profile embeds and hide the shorts row. Do not invent links.",
+    "tiktok": [],
+    "instagram": []
+  },
   "serviceCategories": [
     {
       "id": "streamer",

@@ -57,23 +57,132 @@ async function loadSiteData() {
   return res.json();
 }
 
+function socialById(data, id) {
+  return (data.socialLinks || []).find((link) => link && link.id === id) || null;
+}
+
+function hostIs(url, name) {
+  return new RegExp('(^|\\.)' + name + '\\.com$', 'i').test(url.hostname);
+}
+
+function tiktokHandle(data) {
+  const link = socialById(data, 'tiktok');
+  const href = safeHttp(link && link.url);
+  if (!href) return '';
+  try {
+    const url = new URL(href);
+    if (!hostIs(url, 'tiktok')) return '';
+    const match = url.pathname.match(/^\/@([A-Za-z0-9._]+)/);
+    return match ? match[1] : '';
+  } catch (err) {
+    return '';
+  }
+}
+
+function instagramUser(data) {
+  const link = socialById(data, 'instagram');
+  const href = safeHttp(link && link.url);
+  if (!href) return '';
+  try {
+    const url = new URL(href);
+    if (!hostIs(url, 'instagram')) return '';
+    const segment = (url.pathname.split('/').filter(Boolean)[0] || '');
+    if (!segment || /^(p|reel|reels|stories|explore|accounts)$/i.test(segment)) return '';
+    return /^[A-Za-z0-9._]+$/.test(segment) ? segment : '';
+  } catch (err) {
+    return '';
+  }
+}
+
+function tiktokVideo(value) {
+  const href = safeHttp(value);
+  if (!href) return null;
+  try {
+    const url = new URL(href);
+    if (!hostIs(url, 'tiktok')) return null;
+    const match = url.pathname.match(/\/@([A-Za-z0-9._]+)\/video\/(\d{8,})/);
+    if (!match) return null;
+    return { handle: match[1], id: match[2] };
+  } catch (err) {
+    return null;
+  }
+}
+
+function instagramPermalink(value) {
+  const href = safeHttp(value);
+  if (!href) return '';
+  try {
+    const url = new URL(href);
+    if (!hostIs(url, 'instagram')) return '';
+    const match = url.pathname.match(/^\/(p|reel|reels)\/([A-Za-z0-9_-]+)\/?/);
+    if (!match) return '';
+    const kind = match[1].toLowerCase() === 'reels' ? 'reel' : match[1].toLowerCase();
+    return 'https://www.instagram.com/' + kind + '/' + match[2] + '/';
+  } catch (err) {
+    return '';
+  }
+}
+
+function contactHref() {
+  return document.getElementById('contact') ? '#contact' : 'portfolio.html#contact';
+}
+
 function renderHeader(data) {
   const el = document.querySelector('[data-role="header"]');
   if (!el) return;
   const page = document.body.dataset.page;
   const contact = data.contact || {};
+  const platformsHref = page === 'home' ? '#platforms' : 'index.html#platforms';
+  const servicesCta = page === 'services'
+    ? `<a class="btn btn-primary btn-compact header-cta" href="${mailto(contact.email, contact.subject)}">Contact</a>`
+    : '';
+  const logo = safeAsset(data.profile && data.profile.logo);
   el.innerHTML = `
     <a class="brand" href="index.html">
-      <img src="${escapeHtml(data.profile.logo)}" width="36" height="36" alt="">
-      <span>${escapeHtml(data.profile.handle)}</span>
+      ${logo ? `<img src="${escapeHtml(logo)}" width="36" height="36" alt="">` : ''}
+      <span>${escapeHtml((data.profile && data.profile.handle) || '')}</span>
     </a>
-    <nav class="nav-links" aria-label="Primary">
-      <a href="portfolio.html"${page === 'services' ? ' aria-current="page"' : ''}>Services</a>
-      <a href="index.html#platforms">Platforms</a>
-      <a href="#contact">Contact</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+      <span class="nav-toggle-label">Menu</span>
+    </button>
+    <nav id="site-nav" class="nav-links" aria-label="Primary">
+      <a href="portfolio.html"${page === 'services' ? ' aria-current="page"' : ''}>Professional Services</a>
+      <a href="${platformsHref}">Platforms</a>
+      <a href="${contactHref()}">Work with me</a>
     </nav>
-    <a class="btn btn-primary btn-compact" href="${mailto(contact.email, contact.subject)}">Contact</a>
+    ${servicesCta}
   `;
+  bindMenu(el);
+}
+
+function bindMenu(header) {
+  const toggle = header.querySelector('.nav-toggle');
+  const nav = header.querySelector('#site-nav');
+  if (!toggle || !nav) return;
+  const label = toggle.querySelector('.nav-toggle-label');
+  const setOpen = (open) => {
+    header.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (label) label.textContent = open ? 'Close' : 'Menu';
+  };
+  toggle.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
+  nav.addEventListener('click', (event) => {
+    if (event.target.closest('a')) setOpen(false);
+  });
+  document.addEventListener('click', (event) => {
+    if (!header.classList.contains('is-open') || header.contains(event.target)) return;
+    setOpen(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && header.classList.contains('is-open')) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+  const desktop = window.matchMedia('(min-width: 860px)');
+  const closeOnDesktop = () => { if (desktop.matches) setOpen(false); };
+  if (desktop.addEventListener) desktop.addEventListener('change', closeOnDesktop);
 }
 
 function introMarkup(data) {
@@ -102,10 +211,209 @@ function renderHero(data) {
   const intro = document.querySelector('[data-role="page-intro"]');
   if (intro) intro.innerHTML = introMarkup(data);
   document.querySelectorAll('[data-role="banner-image"]').forEach((banner) => {
+    if (banner.dataset.decorative === 'true') return;
     const src = safeAsset(data.profile && data.profile.banner);
     if (src) banner.src = src;
     if (data.profile && data.profile.bannerAlt) banner.alt = data.profile.bannerAlt;
   });
+}
+
+function renderCreator(data) {
+  const el = document.querySelector('[data-role="creator"]');
+  if (!el) return;
+  const profile = data.profile || {};
+  const logo = safeAsset(profile.logo);
+  const banner = document.querySelector('[data-decorative="true"]');
+  if (banner) {
+    const src = safeAsset(profile.banner);
+    if (src) banner.src = src;
+    banner.alt = '';
+  }
+  el.innerHTML = `
+    ${logo ? `<img class="creator-logo" src="${escapeHtml(logo)}" width="84" height="84" alt="${escapeHtml(profile.logoAlt || '')}">` : ''}
+    <div class="creator-id">
+      <h1>${escapeHtml(profile.handle || '')}</h1>
+      ${profile.tagline ? `<p class="lede">${escapeHtml(profile.tagline)}</p>` : ''}
+    </div>
+    <a class="mast-link" href="#contact">Work with me</a>
+  `;
+}
+
+function profileEmbeds(data) {
+  const cards = [];
+  const tiktok = socialById(data, 'tiktok');
+  const handle = tiktokHandle(data);
+  if (handle) {
+    const cite = 'https://www.tiktok.com/@' + handle;
+    cards.push(`
+      <figure class="embed-card">
+        <figcaption>${escapeHtml((tiktok && tiktok.label) || 'TikTok')}</figcaption>
+        <div class="embed-frame">
+          <blockquote class="tiktok-embed" cite="${cite}" data-unique-id="${escapeHtml(handle)}" data-embed-type="creator">
+            <section><a class="embed-fallback" target="_blank" rel="noopener noreferrer" href="${cite}?refer=creator_embed">${escapeHtml((tiktok && tiktok.label) || 'TikTok')}${externalSuffix()}</a></section>
+          </blockquote>
+        </div>
+      </figure>
+    `);
+  }
+  const instagram = socialById(data, 'instagram');
+  const user = instagramUser(data);
+  if (user) {
+    const permalink = 'https://www.instagram.com/' + user + '/';
+    cards.push(`
+      <figure class="embed-card">
+        <figcaption>${escapeHtml((instagram && instagram.label) || 'Instagram')}</figcaption>
+        <div class="embed-frame">
+          <blockquote class="instagram-media" data-instgrm-permalink="${permalink}" data-instgrm-version="14">
+            <a class="embed-fallback" target="_blank" rel="noopener noreferrer" href="${permalink}">${escapeHtml((instagram && instagram.label) || 'Instagram')}${externalSuffix()}</a>
+          </blockquote>
+        </div>
+      </figure>
+    `);
+  }
+  return cards.join('');
+}
+
+function renderFeeds(data) {
+  const el = document.querySelector('[data-role="feeds"]');
+  if (!el) return;
+  const cards = profileEmbeds(data);
+  if (!cards) {
+    el.hidden = true;
+    return;
+  }
+  el.innerHTML = `
+    <div class="wrap">
+      <h2 class="visually-hidden">TikTok and Instagram</h2>
+      <div class="embed-grid">${cards}</div>
+    </div>
+  `;
+  activateEmbeds(el);
+}
+
+function featuredShorts(data) {
+  const feeds = data.feeds || {};
+  const items = [];
+  const seen = new Set();
+  (Array.isArray(feeds.tiktok) ? feeds.tiktok : []).forEach((entry) => {
+    const video = tiktokVideo(entry);
+    if (!video || seen.has('tt:' + video.id)) return;
+    seen.add('tt:' + video.id);
+    items.push({
+      kind: 'tiktok',
+      href: 'https://www.tiktok.com/@' + video.handle + '/video/' + video.id,
+      player: 'https://www.tiktok.com/player/v1/' + video.id + '?autoplay=0'
+    });
+  });
+  (Array.isArray(feeds.instagram) ? feeds.instagram : []).forEach((entry) => {
+    const permalink = instagramPermalink(entry);
+    if (!permalink || seen.has(permalink)) return;
+    seen.add(permalink);
+    items.push({ kind: 'instagram', href: permalink });
+  });
+  return items;
+}
+
+function renderShorts(data) {
+  const el = document.querySelector('[data-role="shorts"]');
+  if (!el) return;
+  const items = featuredShorts(data);
+  if (!items.length) {
+    el.hidden = true;
+    el.innerHTML = '';
+    return;
+  }
+  el.hidden = false;
+  el.innerHTML = `
+    <div class="wrap">
+      <h2 id="shorts-heading">Shorts</h2>
+      <div class="short-row" tabindex="0" aria-labelledby="shorts-heading">
+        ${items.map((item) => {
+          if (item.kind === 'tiktok') {
+            return `
+              <article class="short-card">
+                <iframe title="TikTok video" data-src="${escapeHtml(item.player)}" allow="fullscreen; encrypted-media; picture-in-picture" loading="lazy"></iframe>
+                <a class="visually-hidden" href="${escapeHtml(item.href)}" target="_blank" rel="noopener noreferrer">TikTok${externalSuffix()}</a>
+              </article>
+            `;
+          }
+          return `
+            <article class="short-card short-card-ig">
+              <blockquote class="instagram-media" data-instgrm-permalink="${escapeHtml(item.href)}" data-instgrm-version="14">
+                <a class="embed-fallback" target="_blank" rel="noopener noreferrer" href="${escapeHtml(item.href)}">Instagram${externalSuffix()}</a>
+              </blockquote>
+            </article>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+  activateEmbeds(el);
+}
+
+const embedScriptPromises = {};
+
+function loadEmbedScript(src) {
+  if (embedScriptPromises[src]) return embedScriptPromises[src];
+  embedScriptPromises[src] = new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => resolve();
+    document.body.appendChild(script);
+  });
+  return embedScriptPromises[src];
+}
+
+function whenVisible(target, fn) {
+  if (!target) return;
+  if (!('IntersectionObserver' in window)) {
+    fn();
+    return;
+  }
+  const observer = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) {
+      observer.disconnect();
+      fn();
+    }
+  }, { rootMargin: '200px' });
+  observer.observe(target);
+}
+
+function activateEmbeds(root) {
+  if (!root) return;
+  whenVisible(root, () => {
+    if (root.querySelector('.tiktok-embed')) loadEmbedScript('https://www.tiktok.com/embed.js');
+    if (root.querySelector('.instagram-media')) {
+      loadEmbedScript('https://www.instagram.com/embed.js').then(() => {
+        if (window.instgrm && window.instgrm.Embeds) window.instgrm.Embeds.process();
+      });
+    }
+    root.querySelectorAll('iframe[data-src]').forEach((frame) => {
+      whenVisible(frame, () => {
+        if (!frame.getAttribute('src')) frame.setAttribute('src', frame.dataset.src);
+      });
+    });
+  });
+}
+
+function renderHomeContact(data) {
+  const el = document.querySelector('[data-role="home-contact"]');
+  if (!el) return;
+  const contact = data.contact || {};
+  el.innerHTML = `
+    <div class="wrap home-contact">
+      <div>
+        <h2 id="contact-heading" class="eyebrow">Work with me</h2>
+        <a class="email-link" href="${mailto(contact.email, contact.subject)}">${escapeHtml(contact.email || '')}</a>
+      </div>
+      <div class="home-contact-side">
+        ${contact.text ? `<p class="lede">${escapeHtml(contact.text)}</p>` : ''}
+        <a class="text-link" href="portfolio.html">Professional Services ${window.svgIcon ? window.svgIcon('arrow-right') : ''}</a>
+      </div>
+    </div>
+  `;
 }
 
 function renderServices(data) {
@@ -159,11 +467,13 @@ function renderPlatforms(data) {
   const el = document.querySelector('[data-role="platforms"]');
   if (!el) return;
   const links = data.socialLinks || [];
+  const home = document.body.dataset.page === 'home';
+  const heading = home
+    ? '<h2 id="platforms-heading" class="section-quiet-title">Also on</h2>'
+    : `<p class="eyebrow">Platforms</p><h2>${escapeHtml(data.profile.handle || '')}</h2>${data.profile.tagline ? `<p class="lede">${escapeHtml(data.profile.tagline)}</p>` : ''}`;
   el.innerHTML = `
     <div class="wrap">
-      <p class="eyebrow">Platforms</p>
-      <h2>${escapeHtml(data.profile.handle || '')}</h2>
-      ${data.profile.tagline ? `<p class="lede">${escapeHtml(data.profile.tagline)}</p>` : ''}
+      ${heading}
       <div class="platform-list">
         ${links.map((link) => {
           const href = safeHttp(link.url);
@@ -310,10 +620,10 @@ function renderFooter(data) {
       <div>
         <p class="footer-label">Services</p>
         <ul>
-          <li><a href="portfolio.html">All services</a></li>
+          <li><a href="portfolio.html">Professional Services</a></li>
           <li><a href="portfolio.html#streamer">Streamer Services</a></li>
           <li><a href="portfolio.html#corporate">Corporate Services</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="${contactHref()}">Work with me</a></li>
         </ul>
       </div>
       <div>
@@ -352,11 +662,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const data = await loadSiteData();
     renderHeader(data);
-    renderHero(data);
-    renderServices(data);
-    renderOptional(data);
-    renderPlatforms(data);
-    renderContact(data);
+    if (document.body.dataset.page === 'home') {
+      renderCreator(data);
+      renderFeeds(data);
+      renderShorts(data);
+      renderPlatforms(data);
+      renderHomeContact(data);
+    } else {
+      renderHero(data);
+      renderServices(data);
+      renderOptional(data);
+      renderContact(data);
+    }
     renderFooter(data);
     document.body.classList.add('is-ready');
   } catch (err) {
