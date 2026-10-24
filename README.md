@@ -1,24 +1,19 @@
 # ndawg2478.github.io
 
-Link-in-bio hub + production services portfolio for @ndawg2478. Static HTML/CSS/vanilla JS, built for GitHub Pages, with a browser-based admin panel for editing content.
+Production services site for @ndawg2478. Static HTML/CSS/vanilla JS, built for GitHub Pages. Edit `data/site-data.json` and commit to publish.
 
 ## File structure
 
 ```
 .
-├── index.html            # Social hub (page 1)
-├── portfolio.html        # Production services (page 2)
-├── admin.html            # Admin portal — edit links, services, logos
-├── admin.js              # Admin portal logic
-├── admin.css             # Admin portal styles
-├── styles.css            # Shared variables + base styles
-├── index.css             # Styles specific to index.html
-├── portfolio.css         # Styles specific to portfolio.html
-├── CNAME                 # Custom domain placeholder
+├── index.html            # Home: hero, services, platforms, contact
+├── portfolio.html        # Services page
+├── styles.css            # All styles
+├── CNAME                 # Custom domain
 ├── data/
-│   └── site-data.json    # All editable content: profile, social links, services
+│   └── site-data.json    # All editable content
 ├── js/
-│   ├── site-data.js      # Fetches site-data.json and renders it into the pages
+│   ├── site-data.js      # Fetches site-data.json and renders the pages
 │   └── icons.js          # Local inline icon set (no external icon-font CDN)
 ├── assets/
 │   ├── banner.jpg        # Sunset mountain-lake banner
@@ -31,18 +26,11 @@ Link-in-bio hub + production services portfolio for @ndawg2478. Static HTML/CSS/
 
 ## How content works now
 
-`index.html` and `portfolio.html` no longer hardcode your links or services — they fetch `data/site-data.json` at load time and render it. That JSON is what `admin.html` edits. A second `site-data.json` in the repo root is not read by the site.
+`index.html` and `portfolio.html` load `data/site-data.json` and render it. That file is the only copy to edit. Empty fields under `optional` (bio, testimonials, client logos, featured work) stay off the page until they are filled.
 
-**⚠️ Important: this is a static site (GitHub Pages), not a backend.** There's no server or database, so:
+The in-browser admin panel has been removed. Its password is still in older git commits and should be treated as exposed — change anything that password was reused for. Do not put a new password in this repository.
 
-- **"Save draft"** in the admin panel stores your edits in that browser's `localStorage` only. It lets you click "Preview site" and see changes immediately, but nobody else sees them, and clearing browser data wipes the draft.
-- **"Export site-data.json"** downloads the edited file. To actually publish changes, replace `/data/site-data.json` in your GitHub repo with the downloaded file and commit — GitHub Pages redeploys automatically within a minute or two.
-
-If you outgrow this and want true live editing without a manual export/commit step, that requires an actual backend (e.g. a small serverless function + database, or a headless CMS like Netlify CMS/Decap) — happy to help set that up if you want to go that route later.
-
-### Admin password
-
-`admin.html` is gated by a password set in `admin.js` (`ADMIN_PASSWORD`). **Change it if the committed value is one you have ever shared.** This is a basic deterrent only, not real security — anyone who views the page source can read the password — so also avoid linking to `/admin.html` from anywhere public.
+**This is a static site (GitHub Pages).** Commit the JSON (and any new image files) and Pages will redeploy within a minute or two.
 
 ### Testing locally
 
@@ -52,7 +40,7 @@ Because the pages `fetch()` the JSON file, opening `index.html` directly from di
 python3 -m http.server 8000
 ```
 
-Then visit `http://localhost:8000/index.html`, `/portfolio.html`, and `/admin.html`.
+Then visit `http://localhost:8000/index.html` and `/portfolio.html`.
 
 ## Deploying to GitHub Pages
 
@@ -73,8 +61,6 @@ Then visit `http://localhost:8000/index.html`, `/portfolio.html`, and `/admin.ht
 3. **Enable Pages.** In the repo, go to **Settings → Pages**. Under "Build and deployment," set Source to **Deploy from a branch**, branch `main`, folder `/ (root)`. Save.
 
 4. **Visit your site.** After a minute or two, it will be live at `https://USERNAME.github.io`.
-
-5. **Change the admin password** in `admin.js` if you are still using a value that has been shared. It's only a casual deterrent (see the warning at the top of that file).
 
 ## Custom domain — connecting ndawg2478.com to GitHub Pages
 
@@ -137,9 +123,8 @@ If you want this to apply on other machines too, repeat Step 3 there (it's a loc
 ## Notes
 
 - The banner is a static image rather than the original source video: a raw 4K/50-second clip is far too large for a lightweight static repo (and exceeds GitHub's per-file size limits), so a high-resolution frame was extracted instead to keep the page fast-loading.
-- Social logos for Twitch, YouTube, TikTok, X, and Instagram are bundled as official SVGs in `assets/icons/` (sourced from Simple Icons, CC0-licensed) so they render reliably without depending on an icon-font CDN. X and TikTok are rendered in white (both are officially monochrome black/white marks) so they stay visible against the dark pill background; the rest keep their real brand colors. Add a logo for any other platform (Discord, Kick, Blerp, etc.) by dropping a file into `assets/icons/` and typing its path into the admin panel.
-- All other icons site-wide (service icons, buttons, admin UI) are inlined directly from Lucide (ISC-licensed) via `js/icons.js` — nothing on the public pages or the admin panel depends on an external icon-font CDN anymore. This was previously Font Awesome loaded from cdnjs, which meant every icon rendered as a blank box in any environment that blocks third-party requests. Service icons are chosen by a short key (`monitor`, `bot`, `shirt`, `scissors`, `video`, `presentation`, `briefcase`, `star`) typed into the admin panel's Icon field for each service — see `js/icons.js` for the full set, or add more there following the same pattern.
-- Update the `mailto:` address in the admin panel's Contact section, and your real social URLs, before publishing.
-- Colors and fonts are controlled via CSS variables at the top of `styles.css` — adjust there to retheme the whole site.
-- Logo/banner uploads in the admin panel embed the image directly into `site-data.json` as base64. That's simplest for a fully client-side workflow, but makes the JSON file bigger — for a leaner repo, you can instead type a path like `assets/yourfile.jpg` into the image field and commit the actual file to `/assets/` yourself.
+- Social logos for Twitch, YouTube, TikTok, X, and Instagram are bundled as official SVGs in `assets/icons/` (sourced from Simple Icons, CC0-licensed). Add another platform by dropping a file into `assets/icons/` and setting its path on a `socialLinks` entry in `data/site-data.json`. An icon value with no slash (such as `shirt`) uses the inline set in `js/icons.js`.
+- Service icons use the same short keys (`monitor`, `bot`, `shirt`, `scissors`, `video`, `presentation`, `briefcase`, `star`).
+- Colors are the variables at the top of `styles.css`. Headings use Fraunces; body text uses the system font.
+- Image fields should be paths like `assets/banner.jpg`. Commit the file next to the JSON. Do not paste base64 into the data file.
 
