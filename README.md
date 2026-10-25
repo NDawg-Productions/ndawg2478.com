@@ -28,13 +28,11 @@ Creator site for @ndawg2478, with professional services on `portfolio.html`. Sta
 
 `index.html` and `portfolio.html` load `data/site-data.json` and render it. That file is the only copy to edit. Empty fields under `optional` (bio, testimonials, client logos, featured work) stay off the page until they are filled.
 
-The homepage embeds the TikTok and Instagram accounts from `socialLinks` with each network's official embed (no API key). `feeds.tiktok` and `feeds.instagram` add specific videos and posts. Leave those lists empty until the URLs are real:
+The homepage shows TikTok and Instagram as cards styled with the site, using the accounts in `socialLinks`. `feeds.tiktok` and `feeds.instagram` add specific videos and posts. Each one is a play tile that loads that network's player only after a click. Leave those lists empty until the URLs are real:
 
 - TikTok video: `https://www.tiktok.com/@ndawg2478/video/VIDEO_ID`
 - Instagram reel: `https://www.instagram.com/reel/SHORTCODE/`
 - Instagram post: `https://www.instagram.com/p/SHORTCODE/`
-
-Embed scripts load only when that part of the page is near the screen.
 
 The in-browser admin panel has been removed. Its password is still in older git commits and should be treated as exposed — change anything that password was reused for. Do not put a new password in this repository.
 

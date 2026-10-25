@@ -363,72 +363,114 @@ h1, h2, h3 {
   text-underline-offset: 4px;
 }
 
-.section-feeds { padding-top: 12px; padding-bottom: 36px; }
-.embed-grid { display: grid; gap: 28px; }
-.embed-card { min-width: 0; }
-.embed-card figcaption {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--faint);
-  margin-bottom: 10px;
-}
-.embed-frame {
+.section-feeds { padding-top: 8px; padding-bottom: 28px; }
+.platform-pair { display: grid; gap: 14px; }
+.platform-card {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
   min-width: 0;
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
+  padding: 26px 24px 22px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--sunset);
+  border-radius: 20px;
 }
-.embed-frame blockquote { margin: 0; }
-.embed-fallback {
-  display: flex;
-  align-items: flex-end;
-  min-height: 168px;
-  padding: 22px;
-  color: #1a140c;
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  letter-spacing: -0.03em;
+.platform-card[data-accent="purple"] { border-top-color: var(--purple); }
+.platform-card-mark {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(243, 239, 230, 0.06);
 }
-.embed-frame .tiktok-embed,
-.embed-frame .instagram-media,
-.embed-frame iframe,
-.short-card .instagram-media,
-.short-card .tiktok-embed,
-.short-card iframe {
-  min-width: 0 !important;
-  max-width: 100% !important;
+.platform-card-mark .mark,
+.platform-card-mark .icon-inline { width: 26px; height: 26px; }
+.platform-card h2 { font-size: clamp(2.2rem, 4vw, 3rem); }
+.platform-card-line {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 1.0625rem;
 }
+.platform-card .btn { margin-top: auto; width: 100%; }
 
-.section-shorts { padding-top: 12px; }
+.section-shorts { padding-top: 20px; padding-bottom: 8px; }
 .section-shorts h2 { font-size: clamp(2rem, 4vw, 2.8rem); }
-.short-row {
+.reel-row {
+  list-style: none;
   display: flex;
-  gap: 12px;
+  gap: 14px;
   margin-top: 18px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
   padding-bottom: 8px;
 }
-.short-card {
-  position: relative;
-  flex: 0 0 min(72vw, 240px);
+.reel {
+  flex: 0 0 min(68vw, 220px);
   aspect-ratio: 9 / 16;
   scroll-snap-align: start;
   border-radius: 18px;
   overflow: hidden;
-  background: #000;
+  background: #141c18;
   border: 1px solid var(--line);
 }
-.short-card-ig { flex-basis: min(86vw, 340px); }
-.short-card iframe,
-.short-card .instagram-media {
+.poster {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 16px;
+  border: 0;
+  color: var(--text);
+  background:
+    radial-gradient(120% 70% at 50% 100%, rgba(224, 135, 42, 0.28), transparent 58%),
+    linear-gradient(165deg, #2a3830, #121916 68%);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.reel[data-accent="purple"] .poster {
+  background:
+    radial-gradient(120% 70% at 50% 100%, rgba(183, 163, 212, 0.34), transparent 58%),
+    linear-gradient(165deg, #322c3c, #121916 68%);
+}
+.poster-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.poster-mark { width: 22px; height: 22px; display: inline-flex; }
+.poster-mark .mark,
+.poster-mark .icon-inline { width: 20px; height: 20px; }
+.poster-play {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--sunset);
+  color: var(--on-sunset);
+}
+.poster:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--sunset-soft);
+}
+.poster-frame {
   width: 100% !important;
   height: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
   border: 0;
   display: block;
+  background: #000;
 }
 
 .section-quiet-title { font-size: 1.65rem; margin-bottom: 4px; }
@@ -551,6 +593,7 @@ h1, h2, h3 {
 
 @media (hover: hover) {
   .nav-links a:hover, .site-footer li a:hover, .platform-link:hover, .mast-link:hover { color: var(--text); }
+  .poster:hover .poster-play { background: var(--sunset-soft); }
   .btn-primary:hover { background: var(--sunset-soft); color: var(--on-sunset); }
   .btn-secondary:hover { border-color: var(--text); }
   .service-card:hover { border-color: var(--line-strong); }
@@ -585,7 +628,8 @@ h1, h2, h3 {
 
 @media (min-width: 760px) {
   .service-grid, .work-grid, .quote-grid { grid-template-columns: 1fr 1fr; }
-  .platform-list { grid-template-columns: 1fr 1fr; }
+  .platform-pair, .platform-list { grid-template-columns: 1fr 1fr; }
+  .platform-card { min-height: 320px; }
   .platform-link:nth-child(odd) { padding-right: 24px; }
   .platform-link:nth-child(even) { padding-left: 24px; border-left: 1px solid var(--line); }
   .bio { grid-template-columns: 0.8fr 1.2fr; gap: 32px; align-items: start; }
@@ -607,8 +651,7 @@ h1, h2, h3 {
   .creator-logo { grid-row: 1 / span 2; width: 88px; height: 88px; }
   .creator-id { grid-column: 2; grid-row: 1 / span 2; }
   .mast-link { grid-column: 3; grid-row: 1 / span 2; }
-  .section-feeds { padding-top: 8px; padding-bottom: 64px; }
-  .embed-grid { grid-template-columns: 1fr 1fr; align-items: start; gap: 22px; }
+  .section-feeds { padding-top: 4px; padding-bottom: 56px; }
   .home-contact { grid-template-columns: 1.1fr 0.9fr; align-items: end; gap: 32px; }
   .hero {
     grid-template-columns: minmax(460px, 46vw) 1fr;

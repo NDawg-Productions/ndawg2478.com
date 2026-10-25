@@ -65,35 +65,6 @@ function hostIs(url, name) {
   return new RegExp('(^|\\.)' + name + '\\.com$', 'i').test(url.hostname);
 }
 
-function tiktokHandle(data) {
-  const link = socialById(data, 'tiktok');
-  const href = safeHttp(link && link.url);
-  if (!href) return '';
-  try {
-    const url = new URL(href);
-    if (!hostIs(url, 'tiktok')) return '';
-    const match = url.pathname.match(/^\/@([A-Za-z0-9._]+)/);
-    return match ? match[1] : '';
-  } catch (err) {
-    return '';
-  }
-}
-
-function instagramUser(data) {
-  const link = socialById(data, 'instagram');
-  const href = safeHttp(link && link.url);
-  if (!href) return '';
-  try {
-    const url = new URL(href);
-    if (!hostIs(url, 'instagram')) return '';
-    const segment = (url.pathname.split('/').filter(Boolean)[0] || '');
-    if (!segment || /^(p|reel|reels|stories|explore|accounts)$/i.test(segment)) return '';
-    return /^[A-Za-z0-9._]+$/.test(segment) ? segment : '';
-  } catch (err) {
-    return '';
-  }
-}
-
 function tiktokVideo(value) {
   const href = safeHttp(value);
   if (!href) return null;
@@ -239,56 +210,41 @@ function renderCreator(data) {
   `;
 }
 
-function profileEmbeds(data) {
-  const cards = [];
-  const tiktok = socialById(data, 'tiktok');
-  const handle = tiktokHandle(data);
-  if (handle) {
-    const cite = 'https://www.tiktok.com/@' + handle;
-    cards.push(`
-      <figure class="embed-card">
-        <figcaption>${escapeHtml((tiktok && tiktok.label) || 'TikTok')}</figcaption>
-        <div class="embed-frame">
-          <blockquote class="tiktok-embed" cite="${cite}" data-unique-id="${escapeHtml(handle)}" data-embed-type="creator">
-            <section><a class="embed-fallback" target="_blank" rel="noopener noreferrer" href="${cite}?refer=creator_embed">${escapeHtml((tiktok && tiktok.label) || 'TikTok')}${externalSuffix()}</a></section>
-          </blockquote>
-        </div>
-      </figure>
-    `);
-  }
-  const instagram = socialById(data, 'instagram');
-  const user = instagramUser(data);
-  if (user) {
-    const permalink = 'https://www.instagram.com/' + user + '/';
-    cards.push(`
-      <figure class="embed-card">
-        <figcaption>${escapeHtml((instagram && instagram.label) || 'Instagram')}</figcaption>
-        <div class="embed-frame">
-          <blockquote class="instagram-media" data-instgrm-permalink="${permalink}" data-instgrm-version="14">
-            <a class="embed-fallback" target="_blank" rel="noopener noreferrer" href="${permalink}">${escapeHtml((instagram && instagram.label) || 'Instagram')}${externalSuffix()}</a>
-          </blockquote>
-        </div>
-      </figure>
-    `);
-  }
-  return cards.join('');
+function platformCard(data, id, accent, action) {
+  const link = socialById(data, id);
+  const href = safeHttp(link && link.url);
+  if (!href) return '';
+  const label = (link && link.label) || '';
+  const handle = (data.profile && data.profile.handle) || '';
+  return `
+    <article class="platform-card" data-accent="${accent}">
+      <div class="platform-card-mark" aria-hidden="true">${iconMarkup(link.icon)}</div>
+      <div class="platform-card-copy">
+        <h2>${escapeHtml(label)}</h2>
+        ${handle ? `<p class="platform-card-line">${escapeHtml(handle)}</p>` : ''}
+      </div>
+      <a class="btn btn-primary" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(action)}${externalSuffix()}</a>
+    </article>
+  `;
 }
 
 function renderFeeds(data) {
   const el = document.querySelector('[data-role="feeds"]');
   if (!el) return;
-  const cards = profileEmbeds(data);
-  if (!cards) {
+  const cards = [
+    platformCard(data, 'tiktok', 'sunset', 'Watch on TikTok'),
+    platformCard(data, 'instagram', 'purple', 'Follow on Instagram')
+  ].join('');
+  if (!cards.trim()) {
     el.hidden = true;
     return;
   }
+  el.hidden = false;
   el.innerHTML = `
     <div class="wrap">
-      <h2 class="visually-hidden">TikTok and Instagram</h2>
-      <div class="embed-grid">${cards}</div>
+      <div class="platform-pair">${cards}</div>
     </div>
   `;
-  activateEmbeds(el);
 }
 
 function featuredShorts(data) {
@@ -299,25 +255,79 @@ function featuredShorts(data) {
     const video = tiktokVideo(entry);
     if (!video || seen.has('tt:' + video.id)) return;
     seen.add('tt:' + video.id);
+    const permalink = 'https://www.tiktok.com/@' + video.handle + '/video/' + video.id;
     items.push({
       kind: 'tiktok',
-      href: 'https://www.tiktok.com/@' + video.handle + '/video/' + video.id,
-      player: 'https://www.tiktok.com/player/v1/' + video.id + '?autoplay=0'
+      href: permalink,
+      player: 'https://www.tiktok.com/player/v1/' + video.id,
+      label: 'Play TikTok video',
+      title: 'TikTok video',
+      name: 'TikTok',
+      accent: 'sunset'
     });
   });
   (Array.isArray(feeds.instagram) ? feeds.instagram : []).forEach((entry) => {
     const permalink = instagramPermalink(entry);
     if (!permalink || seen.has(permalink)) return;
     seen.add(permalink);
-    items.push({ kind: 'instagram', href: permalink });
+    const post = /\/p\//.test(permalink);
+    items.push({
+      kind: 'instagram',
+      href: permalink,
+      player: permalink + 'embed',
+      label: post ? 'Show Instagram post' : 'Play Instagram reel',
+      title: post ? 'Instagram post' : 'Instagram reel',
+      name: 'Instagram',
+      accent: 'purple'
+    });
   });
   return items;
+}
+
+function posterMarkup(item) {
+  return `
+    <li class="reel" data-accent="${item.accent}">
+      <button type="button" class="poster" data-kind="${item.kind}" data-src="${escapeHtml(item.player)}" data-title="${escapeHtml(item.title)}" aria-label="${escapeHtml(item.label)}">
+        <span class="poster-top">
+          <span class="poster-mark" aria-hidden="true">${item.mark}</span>
+          <span>${escapeHtml(item.name)}</span>
+        </span>
+        <span class="poster-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22"><polygon points="9 6 18 12 9 18" fill="currentColor"/></svg>
+        </span>
+      </button>
+    </li>
+  `;
+}
+
+function bindPosters(root) {
+  root.addEventListener('click', (event) => {
+    const btn = event.target.closest('.poster');
+    if (!btn || !root.contains(btn)) return;
+    const base = String(btn.dataset.src || '');
+    if (!/^https:\/\/www\.(tiktok|instagram)\.com\/[A-Za-z0-9@/_.-]+$/.test(base)) return;
+    let src = base;
+    if (btn.dataset.kind === 'tiktok') {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      src += '?autoplay=' + (reduce ? '0' : '1');
+    }
+    const frame = document.createElement('iframe');
+    frame.className = 'poster-frame';
+    frame.src = src;
+    frame.title = btn.dataset.title || 'Video';
+    frame.allow = 'fullscreen; encrypted-media; picture-in-picture; autoplay';
+    frame.setAttribute('allowfullscreen', '');
+    btn.replaceWith(frame);
+  });
 }
 
 function renderShorts(data) {
   const el = document.querySelector('[data-role="shorts"]');
   if (!el) return;
-  const items = featuredShorts(data);
+  const items = featuredShorts(data).map((item) => {
+    const link = socialById(data, item.kind);
+    return Object.assign({}, item, { mark: link ? iconMarkup(link.icon) : '' });
+  });
   if (!items.length) {
     el.hidden = true;
     el.innerHTML = '';
@@ -327,75 +337,12 @@ function renderShorts(data) {
   el.innerHTML = `
     <div class="wrap">
       <h2 id="shorts-heading">Shorts</h2>
-      <div class="short-row" tabindex="0" aria-labelledby="shorts-heading">
-        ${items.map((item) => {
-          if (item.kind === 'tiktok') {
-            return `
-              <article class="short-card">
-                <iframe title="TikTok video" data-src="${escapeHtml(item.player)}" allow="fullscreen; encrypted-media; picture-in-picture" loading="lazy"></iframe>
-                <a class="visually-hidden" href="${escapeHtml(item.href)}" target="_blank" rel="noopener noreferrer">TikTok${externalSuffix()}</a>
-              </article>
-            `;
-          }
-          return `
-            <article class="short-card short-card-ig">
-              <blockquote class="instagram-media" data-instgrm-permalink="${escapeHtml(item.href)}" data-instgrm-version="14">
-                <a class="embed-fallback" target="_blank" rel="noopener noreferrer" href="${escapeHtml(item.href)}">Instagram${externalSuffix()}</a>
-              </blockquote>
-            </article>
-          `;
-        }).join('')}
-      </div>
+      <ul class="reel-row">
+        ${items.map(posterMarkup).join('')}
+      </ul>
     </div>
   `;
-  activateEmbeds(el);
-}
-
-const embedScriptPromises = {};
-
-function loadEmbedScript(src) {
-  if (embedScriptPromises[src]) return embedScriptPromises[src];
-  embedScriptPromises[src] = new Promise((resolve) => {
-    const script = document.createElement('script');
-    script.src = src;
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => resolve();
-    document.body.appendChild(script);
-  });
-  return embedScriptPromises[src];
-}
-
-function whenVisible(target, fn) {
-  if (!target) return;
-  if (!('IntersectionObserver' in window)) {
-    fn();
-    return;
-  }
-  const observer = new IntersectionObserver((entries) => {
-    if (entries.some((entry) => entry.isIntersecting)) {
-      observer.disconnect();
-      fn();
-    }
-  }, { rootMargin: '200px' });
-  observer.observe(target);
-}
-
-function activateEmbeds(root) {
-  if (!root) return;
-  whenVisible(root, () => {
-    if (root.querySelector('.tiktok-embed')) loadEmbedScript('https://www.tiktok.com/embed.js');
-    if (root.querySelector('.instagram-media')) {
-      loadEmbedScript('https://www.instagram.com/embed.js').then(() => {
-        if (window.instgrm && window.instgrm.Embeds) window.instgrm.Embeds.process();
-      });
-    }
-    root.querySelectorAll('iframe[data-src]').forEach((frame) => {
-      whenVisible(frame, () => {
-        if (!frame.getAttribute('src')) frame.setAttribute('src', frame.dataset.src);
-      });
-    });
-  });
+  bindPosters(el);
 }
 
 function renderHomeContact(data) {
