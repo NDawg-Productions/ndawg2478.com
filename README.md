@@ -28,13 +28,11 @@ Creator site for @ndawg2478, with professional services on `portfolio.html`. Sta
 
 `index.html` and `portfolio.html` load `data/site-data.json` and render it. That file is the only copy to edit. Empty fields under `optional` (bio, testimonials, client logos, featured work) stay off the page until they are filled.
 
-The homepage embeds the TikTok and Instagram accounts from `socialLinks` with each network's official embed (no API key). `feeds.tiktok` and `feeds.instagram` add specific videos and posts. Leave those lists empty until the URLs are real:
+The homepage plays the newest public TikTok video from `data/latest.json`. `.github/workflows/update-latest.yml` runs every 6 hours, and when someone starts it by hand. It uses yt-dlp to read the TikTok account in `socialLinks`, then commits `data/latest.json` only when that video changed. GitHub Pages rebuilds from the commit. If the lookup fails, the file is left as it is.
 
-- TikTok video: `https://www.tiktok.com/@ndawg2478/video/VIDEO_ID`
-- Instagram reel: `https://www.instagram.com/reel/SHORTCODE/`
-- Instagram post: `https://www.instagram.com/p/SHORTCODE/`
+Instagram is not included. Reading that profile without a login does not work, and this repo does not store an API token.
 
-Embed scripts load only when that part of the page is near the screen.
+The schedule starts after this workflow is on the default branch. The commit can only be pushed if Actions is allowed to write: **Settings → Actions → General → Workflow permissions → Read and write permissions.**
 
 The in-browser admin panel has been removed. Its password is still in older git commits and should be treated as exposed — change anything that password was reused for. Do not put a new password in this repository.
 

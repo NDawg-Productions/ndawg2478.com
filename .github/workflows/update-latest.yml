@@ -1,0 +1,48 @@
+# Refreshes data/latest.json from the public TikTok profile.
+# Schedule runs on the default branch. A failed lookup does not change the file.
+# Publishing the commit needs Actions write permission:
+# Settings → Actions → General → Workflow permissions → Read and write permissions.
+
+name: Update latest video
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-latest-video
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install yt-dlp
+        run: python -m pip install -r scripts/requirements.txt
+
+      - name: Look up the latest TikTok video
+        run: python scripts/update-latest.py
+
+      - name: Commit when the video changed
+        run: |
+          if [ -z "$(git status --porcelain -- data/latest.json)" ]; then
+            echo "Latest video is unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/latest.json
+          git commit -m "Update the latest TikTok video."
+          git push
