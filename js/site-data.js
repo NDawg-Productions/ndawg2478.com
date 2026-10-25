@@ -79,21 +79,6 @@ function tiktokVideo(value) {
   }
 }
 
-function instagramPermalink(value) {
-  const href = safeHttp(value);
-  if (!href) return '';
-  try {
-    const url = new URL(href);
-    if (!hostIs(url, 'instagram')) return '';
-    const match = url.pathname.match(/^\/(p|reel|reels)\/([A-Za-z0-9_-]+)\/?/);
-    if (!match) return '';
-    const kind = match[1].toLowerCase() === 'reels' ? 'reel' : match[1].toLowerCase();
-    return 'https://www.instagram.com/' + kind + '/' + match[2] + '/';
-  } catch (err) {
-    return '';
-  }
-}
-
 function contactHref() {
   return document.getElementById('contact') ? '#contact' : 'portfolio.html#contact';
 }
@@ -210,139 +195,79 @@ function renderCreator(data) {
   `;
 }
 
-function platformCard(data, id, accent, action) {
+async function loadLatest() {
+  try {
+    const res = await fetch('data/latest.json');
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    return null;
+  }
+}
+
+function latestTikTok(latest) {
+  const item = latest && latest.tiktok;
+  if (!item) return null;
+  const parsed = tiktokVideo(item.url);
+  if (!parsed || String(item.id || '') !== parsed.id) return null;
+  const caption = String(item.caption || '').trim();
+  const postedAt = String(item.postedAt || '').trim();
+  return {
+    id: parsed.id,
+    url: 'https://www.tiktok.com/@' + parsed.handle + '/video/' + parsed.id,
+    caption: caption,
+    postedAt: /^\d{4}-\d{2}-\d{2}T/.test(postedAt) ? postedAt : ''
+  };
+}
+
+function postedLabel(iso) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC'
+  }).format(date);
+}
+
+function followLink(data, id, label) {
   const link = socialById(data, id);
   const href = safeHttp(link && link.url);
   if (!href) return '';
-  const label = (link && link.label) || '';
-  const handle = (data.profile && data.profile.handle) || '';
   return `
-    <article class="platform-card" data-accent="${accent}">
-      <div class="platform-card-mark" aria-hidden="true">${iconMarkup(link.icon)}</div>
-      <div class="platform-card-copy">
-        <h2>${escapeHtml(label)}</h2>
-        ${handle ? `<p class="platform-card-line">${escapeHtml(handle)}</p>` : ''}
+    <a class="follow-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">
+      <span class="follow-mark" aria-hidden="true">${iconMarkup(link.icon)}</span>
+      <span>${escapeHtml(label)}</span>
+      ${externalSuffix()}
+    </a>
+  `;
+}
+
+function renderLatest(data, latest) {
+  const el = document.querySelector('[data-role="latest"]');
+  if (!el) return;
+  const video = latestTikTok(latest);
+  const frameTitle = video && video.caption ? video.caption.slice(0, 120) : 'Latest TikTok video';
+  const player = video ? `
+    <figure class="latest-player">
+      <div class="latest-frame">
+        <iframe src="https://www.tiktok.com/player/v1/${video.id}?autoplay=0&controls=1&progress_bar=1&play_button=1&volume_control=1&fullscreen_button=1&description=0&music_info=0&rel=0" title="${escapeHtml(frameTitle)}" allow="fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
       </div>
-      <a class="btn btn-primary" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(action)}${externalSuffix()}</a>
-    </article>
-  `;
-}
-
-function renderFeeds(data) {
-  const el = document.querySelector('[data-role="feeds"]');
-  if (!el) return;
-  const cards = [
-    platformCard(data, 'tiktok', 'sunset', 'Watch on TikTok'),
-    platformCard(data, 'instagram', 'purple', 'Follow on Instagram')
+      ${video.caption ? `<figcaption class="latest-caption">${escapeHtml(video.caption)}</figcaption>` : ''}
+      ${video.postedAt && postedLabel(video.postedAt) ? `<p class="latest-when">${escapeHtml(postedLabel(video.postedAt))}</p>` : ''}
+    </figure>
+  ` : '';
+  const links = [
+    followLink(data, 'tiktok', 'Follow on TikTok'),
+    followLink(data, 'instagram', 'Follow on Instagram')
   ].join('');
-  if (!cards.trim()) {
-    el.hidden = true;
-    return;
-  }
-  el.hidden = false;
   el.innerHTML = `
-    <div class="wrap">
-      <div class="platform-pair">${cards}</div>
+    <div class="wrap latest-wrap">
+      ${player}
+      ${links.trim() ? `<div class="follow-row">${links}</div>` : ''}
     </div>
   `;
-}
-
-function featuredShorts(data) {
-  const feeds = data.feeds || {};
-  const items = [];
-  const seen = new Set();
-  (Array.isArray(feeds.tiktok) ? feeds.tiktok : []).forEach((entry) => {
-    const video = tiktokVideo(entry);
-    if (!video || seen.has('tt:' + video.id)) return;
-    seen.add('tt:' + video.id);
-    const permalink = 'https://www.tiktok.com/@' + video.handle + '/video/' + video.id;
-    items.push({
-      kind: 'tiktok',
-      href: permalink,
-      player: 'https://www.tiktok.com/player/v1/' + video.id,
-      label: 'Play TikTok video',
-      title: 'TikTok video',
-      name: 'TikTok',
-      accent: 'sunset'
-    });
-  });
-  (Array.isArray(feeds.instagram) ? feeds.instagram : []).forEach((entry) => {
-    const permalink = instagramPermalink(entry);
-    if (!permalink || seen.has(permalink)) return;
-    seen.add(permalink);
-    const post = /\/p\//.test(permalink);
-    items.push({
-      kind: 'instagram',
-      href: permalink,
-      player: permalink + 'embed',
-      label: post ? 'Show Instagram post' : 'Play Instagram reel',
-      title: post ? 'Instagram post' : 'Instagram reel',
-      name: 'Instagram',
-      accent: 'purple'
-    });
-  });
-  return items;
-}
-
-function posterMarkup(item) {
-  return `
-    <li class="reel" data-accent="${item.accent}">
-      <button type="button" class="poster" data-kind="${item.kind}" data-src="${escapeHtml(item.player)}" data-title="${escapeHtml(item.title)}" aria-label="${escapeHtml(item.label)}">
-        <span class="poster-top">
-          <span class="poster-mark" aria-hidden="true">${item.mark}</span>
-          <span>${escapeHtml(item.name)}</span>
-        </span>
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22"><polygon points="9 6 18 12 9 18" fill="currentColor"/></svg>
-        </span>
-      </button>
-    </li>
-  `;
-}
-
-function bindPosters(root) {
-  root.addEventListener('click', (event) => {
-    const btn = event.target.closest('.poster');
-    if (!btn || !root.contains(btn)) return;
-    const base = String(btn.dataset.src || '');
-    if (!/^https:\/\/www\.(tiktok|instagram)\.com\/[A-Za-z0-9@/_.-]+$/.test(base)) return;
-    let src = base;
-    if (btn.dataset.kind === 'tiktok') {
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      src += '?autoplay=' + (reduce ? '0' : '1');
-    }
-    const frame = document.createElement('iframe');
-    frame.className = 'poster-frame';
-    frame.src = src;
-    frame.title = btn.dataset.title || 'Video';
-    frame.allow = 'fullscreen; encrypted-media; picture-in-picture; autoplay';
-    frame.setAttribute('allowfullscreen', '');
-    btn.replaceWith(frame);
-  });
-}
-
-function renderShorts(data) {
-  const el = document.querySelector('[data-role="shorts"]');
-  if (!el) return;
-  const items = featuredShorts(data).map((item) => {
-    const link = socialById(data, item.kind);
-    return Object.assign({}, item, { mark: link ? iconMarkup(link.icon) : '' });
-  });
-  if (!items.length) {
-    el.hidden = true;
-    el.innerHTML = '';
-    return;
-  }
-  el.hidden = false;
-  el.innerHTML = `
-    <div class="wrap">
-      <h2 id="shorts-heading">Shorts</h2>
-      <ul class="reel-row">
-        ${items.map(posterMarkup).join('')}
-      </ul>
-    </div>
-  `;
-  bindPosters(el);
 }
 
 function renderHomeContact(data) {
@@ -607,12 +532,13 @@ function showLoadError() {
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
+    const pendingLatest = document.body.dataset.page === 'home' ? loadLatest() : Promise.resolve(null);
     const data = await loadSiteData();
+    const latest = await pendingLatest;
     renderHeader(data);
     if (document.body.dataset.page === 'home') {
       renderCreator(data);
-      renderFeeds(data);
-      renderShorts(data);
+      renderLatest(data, latest);
       renderPlatforms(data);
       renderHomeContact(data);
     } else {
