@@ -1,5 +1,5 @@
 {
-  "_edit": "This is the only content file. Edit it and commit; GitHub Pages will publish the change. Visitors only see optional sections after the fields are filled. optional.bio is one paragraph. optional.testimonials items need quote and name (role is optional). optional.clientLogos items need name (image is optional). optional.featuredWork items need title, image, and summary (url is optional). Leave them empty until the details are real. The homepage video comes from data/latest.json, which the GitHub Action refreshes from the public TikTok profile. Do not invent a video URL.",
+  "_edit": "This is the only content file. Edit it and commit; GitHub Pages will publish the change. Visitors only see optional sections after the fields are filled. optional.bio is one paragraph. optional.testimonials items need quote and name (role is optional). optional.clientLogos items need name (image is optional). optional.featuredWork items need title, image, and summary (url is optional). Leave them empty until the details are real. The homepage video comes from data/latest.json, which the GitHub Action refreshes from the public TikTok profile. Do not invent a video URL. music items need title and file (an mp3 path under assets/). duration is optional, such as 2:00. An empty music list hides the section.",
   "profile": {
     "handle": "@ndawg2478",
     "tagline": "Streaming from the Pacific Northwest 🌲",
@@ -64,6 +64,13 @@
       "label": "Merch",
       "url": "https://shop.ndawg2478.com",
       "icon": "shirt"
+    }
+  ],
+  "music": [
+    {
+      "title": "The DB Moo - Dubstep Edition",
+      "file": "assets/audio/the-db-moo-dubstep-edition.mp3",
+      "duration": "2:00"
     }
   ],
   "feeds": {

@@ -37,6 +37,22 @@ function safeAsset(path) {
   return '';
 }
 
+function musicTracks(data) {
+  return (Array.isArray(data.music) ? data.music : []).map((track) => {
+    if (!track) return null;
+    const title = String(track.title || '').trim();
+    const file = safeAsset(track.file);
+    if (!title || !/^assets\/.+\.mp3$/i.test(file)) return null;
+    const name = file.split('/').pop();
+    return {
+      title: title,
+      file: file,
+      name: name,
+      duration: String(track.duration || '').trim()
+    };
+  }).filter(Boolean);
+}
+
 function iconMarkup(icon) {
   const value = String(icon || '').trim();
   if (!value) return '';
@@ -89,6 +105,10 @@ function renderHeader(data) {
   const page = document.body.dataset.page;
   const contact = data.contact || {};
   const platformsHref = page === 'home' ? '#platforms' : 'index.html#platforms';
+  const musicHref = page === 'home' ? '#music' : 'index.html#music';
+  const musicLink = musicTracks(data).length
+    ? `<a href="${musicHref}">Music</a>`
+    : '';
   const servicesCta = page === 'services'
     ? `<a class="btn btn-primary btn-compact header-cta" href="${mailto(contact.email, contact.subject)}">Contact</a>`
     : '';
@@ -104,6 +124,7 @@ function renderHeader(data) {
     </button>
     <nav id="site-nav" class="nav-links" aria-label="Primary">
       <a href="portfolio.html"${page === 'services' ? ' aria-current="page"' : ''}>Professional Services</a>
+      ${musicLink}
       <a href="${platformsHref}">Platforms</a>
       <a href="${contactHref()}">Work with me</a>
     </nav>
@@ -266,6 +287,35 @@ function renderLatest(data, latest) {
     <div class="wrap latest-wrap">
       ${player}
       ${links.trim() ? `<div class="follow-row">${links}</div>` : ''}
+    </div>
+  `;
+}
+
+function renderMusic(data) {
+  const el = document.querySelector('[data-role="music"]');
+  if (!el) return;
+  const tracks = musicTracks(data);
+  if (!tracks.length) {
+    el.hidden = true;
+    el.innerHTML = '';
+    return;
+  }
+  el.hidden = false;
+  el.innerHTML = `
+    <div class="wrap">
+      <h2 id="music-heading" class="section-quiet-title">Music</h2>
+      <ul class="track-list">
+        ${tracks.map((track) => `
+          <li class="track">
+            <div class="track-heading">
+              <h3>${escapeHtml(track.title)}</h3>
+              ${track.duration ? `<p class="track-duration">${escapeHtml(track.duration)}</p>` : ''}
+            </div>
+            <audio controls preload="none" src="${escapeHtml(track.file)}" aria-label="${escapeHtml('Play ' + track.title)}"></audio>
+            <a class="btn btn-primary track-download" href="${escapeHtml(track.file)}" download="${escapeHtml(track.name)}">Download ${window.svgIcon ? window.svgIcon('download') : ''}</a>
+          </li>
+        `).join('')}
+      </ul>
     </div>
   `;
 }
@@ -539,6 +589,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (document.body.dataset.page === 'home') {
       renderCreator(data);
       renderLatest(data, latest);
+      renderMusic(data);
       renderPlatforms(data);
       renderHomeContact(data);
     } else {

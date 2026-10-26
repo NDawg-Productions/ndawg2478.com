@@ -265,7 +265,7 @@ h1, h2, h3 {
 /* Sections */
 
 .section { padding: 72px 0; }
-#services, #platforms, #contact, #streamer, #corporate, #work, #about, #watch { scroll-margin-top: 96px; }
+#services, #platforms, #contact, #streamer, #corporate, #work, #about, #watch, #music { scroll-margin-top: 96px; }
 
 .section-intro {
   display: flex;
@@ -412,6 +412,40 @@ h1, h2, h3 {
 .follow-mark { width: 18px; height: 18px; display: inline-flex; }
 .follow-mark .mark,
 .follow-mark .icon-inline { width: 18px; height: 18px; }
+
+.section-music { padding-top: 28px; padding-bottom: 12px; }
+.track-list { list-style: none; display: grid; gap: 14px; margin-top: 18px; }
+.track {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 22px 22px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--sunset);
+  border-radius: 20px;
+}
+.track-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px 16px;
+}
+.track h3 { font-size: clamp(1.45rem, 2.5vw, 1.9rem); }
+.track-duration {
+  color: var(--faint);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+.track audio {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  color-scheme: dark;
+  accent-color: var(--sunset);
+}
+.track-download { width: 100%; }
 
 .section-quiet-title { font-size: 1.65rem; margin-bottom: 4px; }
 
@@ -622,6 +656,10 @@ h1, h2, h3 {
   }
   .section { padding: 104px 0; }
   .section-latest { padding-top: 8px; padding-bottom: 36px; }
+  .section-music { padding-top: 48px; padding-bottom: 12px; }
+  .track { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .track-heading { grid-column: 1 / -1; }
+  .track-download { width: auto; }
   .contact-slim { padding-top: 56px; padding-bottom: 96px; }
   .contact-layout { grid-template-columns: 1.3fr 0.7fr; align-items: end; }
   .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; }
