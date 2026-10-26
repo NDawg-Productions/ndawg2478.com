@@ -68,6 +68,11 @@
   ],
   "music": [
     {
+      "title": "Puff and the Bad Boys (DB an CJShiz)",
+      "file": "assets/audio/puff-and-the-bad-boys.mp3",
+      "duration": "3:10"
+    },
+    {
       "title": "The Crash Out Shanty",
       "file": "assets/audio/the-crash-out-shanty.mp3",
       "duration": "2:34"
