@@ -1,6 +1,6 @@
 # ndawg2478.github.io
 
-Creator site for @ndawg2478, with professional services on `portfolio.html`. Static HTML/CSS/vanilla JS, built for GitHub Pages. Edit `data/site-data.json` and commit to publish.
+Creator site for Ndawg2478, with professional services on `portfolio.html`. Static HTML/CSS/vanilla JS, built for GitHub Pages. Edit `data/site-data.json` and commit to publish.
 
 ## File structure
 
@@ -16,6 +16,7 @@ Creator site for @ndawg2478, with professional services on `portfolio.html`. Sta
 │   ├── site-data.js      # Fetches site-data.json and renders the pages
 │   └── icons.js          # Local inline icon set (no external icon-font CDN)
 ├── assets/
+│   ├── audio/            # Downloadable tracks
 │   ├── banner.jpg        # Sunset mountain-lake banner
 │   ├── profile.webp      # Low-poly Saint Bernard logo
 │   ├── favicon.png
@@ -27,6 +28,8 @@ Creator site for @ndawg2478, with professional services on `portfolio.html`. Sta
 ## How content works now
 
 `index.html` and `portfolio.html` load `data/site-data.json` and render it. That file is the only copy to edit. Empty fields under `optional` (bio, testimonials, client logos, featured work) stay off the page until they are filled.
+
+`music` in `data/site-data.json` is the homepage download list. Each item needs `title` and `file` (an `.mp3` under `assets/`). `duration` is optional. An empty list hides the section.
 
 The homepage plays the newest public TikTok video from `data/latest.json`. `.github/workflows/update-latest.yml` runs every 6 hours, and when someone starts it by hand. It uses yt-dlp to read the TikTok account in `socialLinks`, then commits `data/latest.json` only when that video changed. GitHub Pages rebuilds from the commit. If the lookup fails, the file is left as it is.
 
