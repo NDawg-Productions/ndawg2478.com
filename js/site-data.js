@@ -318,6 +318,18 @@ function renderMusic(data) {
       </ul>
     </div>
   `;
+  bindMusicPlayers(el);
+}
+
+function bindMusicPlayers(root) {
+  const players = [...root.querySelectorAll('audio')];
+  players.forEach((player) => {
+    player.addEventListener('play', () => {
+      players.forEach((other) => {
+        if (other !== player && !other.paused) other.pause();
+      });
+    });
+  });
 }
 
 function renderHomeContact(data) {

@@ -1,6 +1,6 @@
 # ndawg2478.github.io
 
-Creator site for @ndawg2478, with professional services on `portfolio.html`. Static HTML/CSS/vanilla JS, built for GitHub Pages. Edit `data/site-data.json` and commit to publish.
+Creator site for Ndawg2478, with professional services on `portfolio.html`. Static HTML/CSS/vanilla JS, built for GitHub Pages. Edit `data/site-data.json` and commit to publish.
 
 ## File structure
 

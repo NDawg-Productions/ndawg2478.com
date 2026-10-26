@@ -1,10 +1,10 @@
 {
   "_edit": "This is the only content file. Edit it and commit; GitHub Pages will publish the change. Visitors only see optional sections after the fields are filled. optional.bio is one paragraph. optional.testimonials items need quote and name (role is optional). optional.clientLogos items need name (image is optional). optional.featuredWork items need title, image, and summary (url is optional). Leave them empty until the details are real. The homepage video comes from data/latest.json, which the GitHub Action refreshes from the public TikTok profile. Do not invent a video URL. music items need title and file (an mp3 path under assets/). duration is optional, such as 2:00. An empty music list hides the section.",
   "profile": {
-    "handle": "@ndawg2478",
+    "handle": "Ndawg2478",
     "tagline": "Streaming from the Pacific Northwest 🌲",
     "logo": "assets/profile.webp",
-    "logoAlt": "ndawg2478 logo — low-poly Saint Bernard on a green diamond",
+    "logoAlt": "Ndawg2478 logo — low-poly Saint Bernard on a green diamond",
     "banner": "assets/banner.jpg",
     "bannerAlt": "Sunset over a Pacific Northwest mountain lake"
   },
@@ -26,7 +26,7 @@
     "button": "Contact for Production Inquiries"
   },
   "footer": {
-    "copyright": "© 2026 ndawg2478. Made in the PNW."
+    "copyright": "© 2026 Ndawg2478. Made in the PNW."
   },
   "socialLinks": [
     {
@@ -67,6 +67,11 @@
     }
   ],
   "music": [
+    {
+      "title": "The Crash Out Shanty",
+      "file": "assets/audio/the-crash-out-shanty.mp3",
+      "duration": "2:34"
+    },
     {
       "title": "The DB Moo - Dubstep Edition",
       "file": "assets/audio/the-db-moo-dubstep-edition.mp3",
