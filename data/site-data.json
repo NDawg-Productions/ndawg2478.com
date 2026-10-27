@@ -68,6 +68,11 @@
   ],
   "music": [
     {
+      "title": "Santa Puff's Naughty List (Merry Christmas, DB)",
+      "file": "assets/audio/santa-puffs-naughty-list.mp3",
+      "duration": "2:40"
+    },
+    {
       "title": "The Goobers",
       "file": "assets/audio/the-goobers.mp3",
       "duration": "2:58"
