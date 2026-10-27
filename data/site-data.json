@@ -68,6 +68,11 @@
   ],
   "music": [
     {
+      "title": "The Goobers",
+      "file": "assets/audio/the-goobers.mp3",
+      "duration": "2:58"
+    },
+    {
       "title": "Puff and the Bad Boys (DB an CJShiz)",
       "file": "assets/audio/puff-and-the-bad-boys.mp3",
       "duration": "3:10"
